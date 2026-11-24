@@ -119,7 +119,15 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
 .spinner{width:40px;height:40px;border:4px solid var(--surface);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:768px){.stats-grid,.detail-grid,.form-row{grid-template-columns:1fr}.navbar{height:auto;padding:12px}.nav-links button{padding:8px 10px;font-size:12px}}
-@media print{.navbar,.no-print,.ai-bar,#loading-overlay{display:none!important}}
+@media print{
+  .navbar,.no-print,.ai-bar,#loading-overlay,.page-header{display:none!important}
+  #verifikasiForm{display:none!important}
+  #detail-grid{display:none!important}
+  #laporan-section{display:block!important}
+  .doc-sheet{border:none;padding:0}
+  body{background:#fff}
+  .rep-item{break-inside:avoid}
+}
 
 /* ---------- Kop dokumen rasmi ---------- */
 .doc-letterhead{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border:1px solid var(--border);border-bottom:3px solid var(--primary);border-radius:8px 8px 0 0;margin-bottom:0}
@@ -188,6 +196,13 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
 .ev-tag.date{background:#DBEAFE;color:#1E40AF}
 .ev-tag.file{background:#FEF3C7;color:#92400E}
 .ev-tag.text{background:#E0E7FF;color:#3730A3}
+.report-block{margin-bottom:16px}
+.report-label{font-family:'Lexend',sans-serif;font-size:11px;font-weight:700;letter-spacing:.07em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.report-text{font-size:13.5px;line-height:1.75;background:#FAFAF9;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;padding:12px 14px;white-space:pre-wrap}
+.rep-item{border:1px solid #FECACA;background:#FEF2F2;border-radius:4px;padding:10px 12px;margin-bottom:8px;font-size:12.5px}
+.rep-item .rn{font-weight:700;color:#991B1B}
+.rep-item .rp{font-weight:600;margin:4px 0}
+.rep-item .rb{color:#475569;font-style:italic;font-size:11.5px;margin-top:4px;padding-left:10px;border-left:2px solid #FCA5A5}
 /* Badge status dokumen */
 .badge-doc{display:inline-block;padding:3px 10px;font-size:11px;font-weight:700;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
 .badge-pending{background:#FEF3C7;color:#92400E}
@@ -483,7 +498,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
         </div>
 
         <div class="form-actions no-print" style="margin-top:26px">
-          <button type="button" class="btn btn-primary btn-lg" id="btn-save-verif" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
+          <button type="button" class="btn btn-primary btn-lg" id="btn-save-verif" onclick="saveVerifikasi(event)">Sahkan & Simpan Verifikasi</button>
           <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('senarai')">Kembali</button>
         </div>
       </form>
@@ -494,15 +509,45 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
           <div class="patuh-summary">
             <div class="patuh-ring" id="patuh-ring"><div class="patuh-percent" id="patuh-percent">0%</div><div class="patuh-label">Patuh</div></div>
             <div class="patuh-breakdown">
-              <div class="patuh-item"><span class="dot dot-green"></span>Ya: <span id="count-ya">0</span></div>
-              <div class="patuh-item"><span class="dot dot-red"></span>Tidak: <span id="count-tidak">0</span></div>
-              <div class="patuh-item"><span class="dot dot-grey"></span>Tidak Berkaitan: <span id="count-tb">0</span></div>
+              <div class="patuh-item"><span class="dot dot-green"></span>Patuh: <span id="count-ya">0</span></div>
+              <div class="patuh-item"><span class="dot dot-red"></span>Tidak Patuh: <span id="count-tidak">0</span></div>
+              <div class="patuh-item"><span class="dot dot-grey"></span>Tidak Berkenaan: <span id="count-tb">0</span></div>
             </div>
           </div>
         </div>
+
         <div class="doc-section">
           <div class="doc-section-title">Keputusan Akhir</div>
           <div class="keputusan-display" id="keputusan-display"></div>
+        </div>
+
+        <div class="doc-section">
+          <div class="doc-section-title">Rumusan Pemeriksa Dalam</div>
+          <div class="report-block">
+            <div class="report-label">KEKUATAN</div>
+            <div class="report-text" id="rep-kekuatan">-</div>
+          </div>
+          <div class="report-block">
+            <div class="report-label">KELEMAHAN</div>
+            <div class="report-text" id="rep-kelemahan">-</div>
+          </div>
+          <div class="report-block">
+            <div class="report-label">CADANGAN PENAMBAHBAIKAN</div>
+            <div class="report-text" id="rep-cadangan">-</div>
+          </div>
+        </div>
+
+        <div class="doc-section">
+          <div class="doc-section-title">Butiran Item Yang Tidak Patuh</div>
+          <div id="rep-tidakpatuh"></div>
+        </div>
+
+        <div class="doc-sign">
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disahkan Oleh</div>
+            <div class="hint">Pemeriksa Dalam (PD)<br><strong id="rep-pdname">HANIFF FAIZAL BIN CHEK ANI</strong><br><span id="rep-tarikh"></span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -692,14 +737,42 @@ function loadList(){
   });
 }
 function rowCells(s){
-  var fb=s.Fasa==='perancangan'?'<span class="badge badge-blue">Perancangan</span>':'<span class="badge badge-purple">Moderasi</span>';
-  var sb='';
-  if(s.Status==='diterima')sb='<span class="badge badge-orange">Menunggu</span>';
-  else if(s.Status==='selesai')sb='<span class="badge badge-green">Selesai</span>';
-  else sb='<span class="badge badge-grey">'+esc(s.Status)+'</span>';
-  var pct=s.Peratus_Patuhan?'<span class="badge badge-green">'+s.Peratus_Patuhan+'%</span>':'-';
-  var t=s.Tarikh_Hantar?new Date(s.Tarikh_Hantar).toLocaleDateString('ms-MY'):'-';
-  return '<td><strong>'+esc(s.ID)+'</strong></td><td>'+esc(s.Nama_Kursus)+'<br><small>'+esc(s.Kod_Kursus)+'</small></td><td>'+fb+'</td><td>'+esc(s.Nama_Pensyarah)+'</td><td>'+sb+'</td><td>'+pct+'</td><td><button class="btn btn-primary btn-sm" onclick="openSemak(\''+esc(s.ID)+'\')">Semak</button></td>';
+  var fb = s.Fasa==='perancangan'
+    ? '<span class="badge badge-blue">Perancangan</span>'
+    : '<span class="badge badge-purple">Moderasi</span>';
+
+  var st = String(s.Status||'');
+  var sb = '';
+  if(st === 'diterima')        sb = '<span class="badge badge-orange">Menunggu Semakan</span>';
+  else if(st === 'semasa_diperiksa') sb = '<span class="badge badge-yellow">Perlu Pengesahan</span>';
+  else if(st === 'selesai')     sb = '<span class="badge badge-green">Selesai</span>';
+  else                          sb = '<span class="badge badge-grey">'+esc(st)+'</span>';
+
+  var pct = s.Peratus_Patuhan ? '<span class="badge badge-green">'+s.Peratus_Patuhan+'%</span>' : '-';
+
+  // Butang mengikut peringkat — elak semakan berulang & pembaziran token
+  var btn = '';
+  if(st === 'diterima'){
+    btn = '<button class="btn btn-primary btn-sm" onclick="openSemak(\''+esc(s.ID)+'\')">Semak</button>';
+  } else if(st === 'semasa_diperiksa'){
+    btn = '<button class="btn btn-primary btn-sm" onclick="openSemak(\''+esc(s.ID)+'\')">Sahkan</button>';
+  } else if(st === 'selesai'){
+    btn = '<button class="btn btn-secondary btn-sm" onclick="openSemak(\''+esc(s.ID)+'\')">Laporan</button>' +
+          '<button class="btn btn-secondary btn-sm" style="margin-left:6px" onclick="cetakLaporan(\''+esc(s.ID)+'\')">Cetak</button>';
+  }
+
+  return '<td><strong>'+esc(s.ID)+'</strong></td>' +
+         '<td>'+esc(s.Nama_Kursus)+'<br><small>'+esc(s.Kod_Kursus)+'</small></td>' +
+         '<td>'+fb+'</td>' +
+         '<td>'+esc(s.Nama_Pensyarah)+'</td>' +
+         '<td>'+sb+'</td>' +
+         '<td>'+pct+'</td>' +
+         '<td>'+btn+'</td>';
+}
+
+function cetakLaporan(id){
+  openSemak(id);
+  setTimeout(function(){ window.print(); }, 1800);
 }
 
 // ============ HANTAR ============
@@ -783,6 +856,7 @@ function submitForm(e){
 
 // ============ SEMAK (Borang VPB) ============
 var currentSubId = null;
+var currentSub = null;
 var currentChecklist = [];
 var currentSections = {};
 
@@ -798,6 +872,7 @@ function loadSubmission(){
   api('getSubmission',{id:currentSubId}).then(function(res){
     if(!res.success){ showAlert(res.error||'Tidak dijumpai','error'); return; }
     var s = res.submission;
+    currentSub = s;
     currentChecklist = res.checklist || [];
     currentSections = res.sections || {};
 
@@ -880,13 +955,14 @@ function loadSubmission(){
 
     document.getElementById('checklist-body').innerHTML = html2;
 
-    if(s.Nama_PD && s.Nama_PD.indexOf('Sistem') !== 0) document.getElementById('namaPD').value = s.Nama_PD;
+    document.getElementById('namaPD').value = 'HANIFF FAIZAL BIN CHEK ANI';
     if(s.Kekuatan) document.getElementById('kekuatan').value = s.Kekuatan;
     if(s.Kelemahan) document.getElementById('kelemahan').value = s.Kelemahan;
     if(s.Cadangan) document.getElementById('cadangan').value = s.Cadangan;
     if(s.Keputusan){ var rad = document.querySelector('input[name="keputusan"][value="'+s.Keputusan+'"]'); if(rad) rad.checked = true; }
 
     updateVpbSummary();
+    refreshAiBtn(s);
 
     // Ringkasan jika sudah selesai
     if(s.Status==='selesai' && s.Peratus_Patuhan){
@@ -902,10 +978,34 @@ function loadSubmission(){
       document.getElementById('count-ya').textContent = ya;
       document.getElementById('count-tidak').textContent = tk;
       document.getElementById('count-tb').textContent = tb;
+
       var kd = document.getElementById('keputusan-display');
       if(s.Keputusan==='lulus'){ kd.className='keputusan-display keputusan-lulus'; kd.textContent='LULUS — Mematuhi standard'; }
-      else if(s.Keputusan==='perlu_pembetulan'){ kd.className='keputusan-display keputusan-pembetulan'; kd.textContent='PERLU PEMBETULAN'; }
+      else if(s.Keputusan==='perlu_pembetulan'){ kd.className='keputusan-display keputusan-pembetulan'; kd.textContent='PERLU PEMBETULAN — Pematuhan dengan pembetulan'; }
       else { kd.className='keputusan-display keputusan-tolak'; kd.textContent='TIDAK LULUS — Tidak mematuhi standard'; }
+
+      // Rumusan
+      document.getElementById('rep-kekuatan').textContent = s.Kekuatan || 'Tiada dinyatakan.';
+      document.getElementById('rep-kelemahan').textContent = s.Kelemahan || 'Tiada dinyatakan.';
+      document.getElementById('rep-cadangan').textContent = s.Cadangan || s.Ulasan || 'Tiada dinyatakan.';
+      document.getElementById('rep-pdname').textContent = res.namaPDRekod || 'HANIFF FAIZAL BIN CHEK ANI';
+      if(s.Tarikh_Verifikasi){
+        var tv = new Date(s.Tarikh_Verifikasi);
+        document.getElementById('rep-tarikh').textContent = tv.toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'});
+      }
+
+      // Senarai item tidak patuh dengan bukti
+      var tp = '';
+      (res.results||[]).forEach(function(r){
+        if(String(r.kod||'').toUpperCase() !== 'N') return;
+        tp += '<div class="rep-item">' +
+              '<div class="rn">Item ' + r.itemNo + ' \u00b7 ' + escq(r.seksyen||'') + '</div>' +
+              '<div class="rp">' + escq(r.pilihan||'') + '</div>' +
+              (r.bukti ? '<div class="rb">Bukti: ' + escq(r.bukti) + '</div>' : '<div class="rb">Tiada bukti dalam dokumen.</div>') +
+              (r.catatan ? '<div class="rb">Catatan: ' + escq(r.catatan) + '</div>' : '') +
+              '</div>';
+      });
+      document.getElementById('rep-tidakpatuh').innerHTML = tp || '<p style="font-size:13px;color:#166534">Tiada item tidak patuh.</p>';
     } else {
       document.getElementById('laporan-section').style.display = 'none';
     }
@@ -983,6 +1083,8 @@ function saveVerifikasi(e){
     if(!confirm('Item berikut belum ada bukti: '+noBukti.join(', ')+'\n\nTeruskan simpan?')) return false;
   }
 
+  if(!confirm('Sahkan verifikasi untuk ' + currentSubId + '?\n\nSelepas disahkan, rekod ini menjadi laporan rasmi dan tidak boleh disemak semula.')) return false;
+
   showLoading('Menyimpan verifikasi...');
   api('saveVerifikasi', {
     id: currentSubId,
@@ -1002,8 +1104,34 @@ function saveVerifikasi(e){
   return false;
 }
 
+function refreshAiBtn(s){
+  var btn = document.getElementById('aiBtn');
+  if(!btn) return;
+  var st = String((s && s.Status) || '');
+  var done = (st === 'selesai');
+  var analisis = (st === 'semasa_diperiksa');
+  if(done){
+    btn.style.display = 'none';
+    var bar = document.querySelector('.ai-bar');
+    if(bar) bar.style.display = 'none';
+    return;
+  }
+  btn.style.display = '';
+  if(analisis){
+    btn.textContent = 'Semak Semula (1 kali)';
+    btn.title = 'Dokumen sudah disemak. Hanya semak semula jika benar-benar perlu — setiap semakan menggunakan token.';
+  } else {
+    btn.textContent = 'Semak Dokumen';
+    btn.title = 'Semak dokumen sekali sahaja.';
+  }
+}
+
 function runAI(){
   var btn = document.getElementById('aiBtn');
+  var st = String((currentSub || {}).Status || '');
+  if(st === 'semasa_diperiksa'){
+    if(!confirm('Dokumen ini SUDAH disemak.\n\nSemakan semula akan menggunakan token tambahan dan menimpa cadangan sedia ada.\n\nTeruskan?')) return;
+  }
   btn.textContent = 'Menyemak... (30–90 saat)';
   btn.disabled = true;
   showLoading('Membaca dokumen dan menganalisis borang VPB...');
@@ -1048,6 +1176,8 @@ function doAdminLogin(e){
       setTimeout(function(){
         closeAdminLogin();
         applyAdminState();
+        loadList();
+        loadDashboard();
         showPage('konfigurasi');
       }, 600);
     } else {
@@ -1065,6 +1195,8 @@ function adminLogout(){
   try{ sessionStorage.removeItem('pd_admin'); }catch(x){}
   if(t){ api('logoutAdmin', {token:t}).catch(function(){}); }
   applyAdminState();
+  loadList();
+  loadDashboard();
   showPage('dashboard');
   showAlert('Log keluar pentadbir.','success');
 }
