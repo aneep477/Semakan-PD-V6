@@ -115,19 +115,108 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
 .spinner{width:40px;height:40px;border:4px solid var(--surface);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:768px){.stats-grid,.detail-grid,.form-row{grid-template-columns:1fr}.navbar{height:auto;padding:12px}.nav-links button{padding:8px 10px;font-size:12px}}
-@media print{.navbar,footer,.no-print,.ai-bar,#loading-overlay{display:none!important}}
+@media print{.navbar,.no-print,.ai-bar,#loading-overlay{display:none!important}}
+
+/* ---------- Kop dokumen rasmi ---------- */
+.doc-letterhead{display:flex;align-items:center;gap:16px;padding:18px 22px;background:#fff;border:1px solid var(--border);border-bottom:3px solid var(--primary);border-radius:8px 8px 0 0;margin-bottom:0}
+.doc-letterhead .crest{flex:0 0 auto;width:64px;height:64px}
+.doc-letterhead .lh-text{flex:1;text-align:center}
+.doc-letterhead .lh-text .lh-inst{font-family:'Lexend',sans-serif;font-size:15px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--primary);line-height:1.3}
+.doc-letterhead .lh-text .lh-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.doc-letterhead .lh-text .lh-dept{font-size:13px;font-weight:600;color:#020617;margin-top:6px}
+.doc-letterhead .lh-right{flex:0 0 auto;width:64px;text-align:right}
+
+.doc-sheet{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:26px 28px 30px}
+.doc-title{font-family:'Lexend',sans-serif;font-size:17px;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.03em;color:var(--primary);margin-bottom:4px}
+.doc-subtitle{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+.doc-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;font-size:13.5px;margin-bottom:20px}
+.doc-meta .row{display:flex;gap:8px}
+.doc-meta .k{color:var(--muted);min-width:132px;font-weight:600}
+.doc-meta .v{color:#020617;font-weight:500}
+.doc-section{margin-bottom:20px}
+.doc-section-title{font-family:'Lexend',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:12px}
+.doc-note{font-size:12.5px;color:var(--muted);line-height:1.6}
+.doc-sign{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px;padding-top:18px;border-top:1px solid var(--border)}
+.doc-sign .sig{font-size:11.5px;text-align:center}
+.doc-sign .sig .line{border-bottom:1px solid #020617;height:34px;margin-bottom:6px}
+.doc-sign .sig .role{font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;font-size:10.5px}
+.doc-sign .sig .hint{color:var(--muted);margin-top:3px;font-size:10px;line-height:1.4}
+
+/* ---------- Borang VPB ---------- */
+.vpb-group{margin-bottom:26px}
+.vpb-group-head{display:flex;align-items:center;gap:10px;background:var(--primary);color:#fff;padding:9px 14px;border-radius:5px;font-family:'Lexend',sans-serif;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.vpb-item{border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:12px;background:#fff}
+.vpb-item.has-bukti{border-left:3px solid #16A34A}
+.vpb-item.no-bukti{border-left:3px solid #DC2626}
+.vpb-q{display:flex;gap:10px;font-size:13.5px;font-weight:600;line-height:1.55;color:#020617;margin-bottom:12px}
+.vpb-num{flex:0 0 24px;height:24px;border-radius:50%;background:var(--surface);color:var(--primary);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.vpb-opts{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;padding-left:34px}
+.vpb-opt{display:flex;gap:9px;align-items:flex-start;padding:7px 10px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:13px;line-height:1.5;transition:background .15s,border-color .15s}
+.vpb-opt:hover{background:var(--surface);border-color:#94A3B8}
+.vpb-opt input{margin-top:2px;flex:0 0 auto;width:15px;height:15px;cursor:pointer}
+.vpb-opt.positive{border-left:3px solid #16A34A}
+.vpb-opt.negative{border-left:3px solid #E5E7EB}
+.vpb-opt.na{border-left:3px solid #94A3B8}
+.vpb-opt.checked{background:#EFF6FF;border-color:var(--accent);font-weight:600}
+.vpb-opt.positive.checked{background:#F0FDF4;border-color:#16A34A}
+.vpb-opt.na.checked{background:#F1F5F9;border-color:#64748B}
+.vpb-evidence{padding-left:34px}
+.vpb-evidence label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:5px}
+.vpb-evidence textarea,.vpb-evidence input{width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 9px;font-size:12.5px;font-family:inherit;line-height:1.5;background:#FFFEF7;resize:vertical}
+.vpb-evidence textarea:focus,.vpb-evidence input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(3,105,161,.12)}
+.vpb-evidence textarea:empty{background:#FFFEF7}
+.ev-warn{color:#B91C1C;font-size:11.5px;font-weight:600;margin-top:4px;display:none}
+.ev-warn.show{display:block}
+.vpb-summary-bar{display:flex;gap:16px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:18px;font-size:12.5px;font-weight:600}
+.vpb-summary-bar span{color:var(--muted)}
+.vpb-summary-bar strong{color:var(--primary);font-size:15px;margin-left:5px}
+
+/* Badge status dokumen */
+.badge-doc{display:inline-block;padding:3px 10px;font-size:11px;font-weight:700;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
+.badge-pending{background:#FEF3C7;color:#92400E}
+.badge-done{background:#DCFCE7;color:#166534}
+
+/* ---------- Modal login admin ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-mask.show{display:flex}
+.modal-box{background:#fff;border-radius:10px;width:100%;max-width:400px;padding:26px;box-shadow:0 20px 50px rgba(2,6,23,.25)}
+.modal-box h3{font-family:'Lexend',sans-serif;font-size:18px;margin-bottom:6px;color:var(--primary)}
+.modal-box p.modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.modal-actions{display:flex;gap:8px;margin-top:18px}
+.nav-admin{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:6px;margin-left:8px}
+.nav-admin:hover{background:rgba(255,255,255,.22)!important}
+.admin-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#166534;background:#DCFCE7;padding:4px 10px;border-radius:20px}
+@media(max-width:768px){
+  .doc-meta{grid-template-columns:1fr}
+  .doc-sign{grid-template-columns:1fr 1fr}
+  .doc-letterhead{flex-direction:column;text-align:center}
+  .doc-letterhead .lh-right{display:none}
+}
 </style>
 </head>
 <body>
 <div id="loading-overlay"><div class="spinner"></div><div id="loading-text">Sila tunggu...</div></div>
 
 <nav class="navbar">
-  <div class="nav-brand"><span class="mark">PD</span><span>Sistem Verifikasi Pemeriksa Dalam</span></div>
+  <div class="nav-brand">
+    <svg class="ipg-logo" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" fill="#FFFFFF" opacity="0.12"/>
+      <path d="M24 9 L38 16 L24 23 L10 16 Z" fill="#F2C14E"/>
+      <path d="M14 20.5 V29 C14 33.5 18.5 36.5 24 36.5 C29.5 36.5 34 33.5 34 29 V20.5" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="38" cy="17" r="2.2" fill="#F2C14E"/>
+      <path d="M38 19 V26" stroke="#F2C14E" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span class="brand-text">
+      <strong>Sistem Verifikasi Pemeriksa Dalam</strong>
+      <small>IPG Kampus Darulaman</small>
+    </span>
+  </div>
   <div class="nav-links">
     <button data-page="dashboard" class="active" onclick="showPage('dashboard')">Dashboard</button>
     <button data-page="hantar" onclick="showPage('hantar')">Hantar Dokumen</button>
     <button data-page="senarai" onclick="showPage('senarai')">Senarai Semakan</button>
-    <button data-page="konfigurasi" onclick="showPage('konfigurasi')">Konfigurasi AI</button>
+    <button data-page="konfigurasi" id="nav-konfigurasi" style="display:none" onclick="showPage('konfigurasi')">Konfigurasi AI</button>
+    <button id="nav-admin" onclick="openAdminLogin()" class="nav-admin">Log Masuk Admin</button>
   </div>
 </nav>
 
@@ -156,72 +245,132 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
 
   <!-- ==================== HANTAR ==================== -->
   <section id="page-hantar" class="page">
-    <div class="page-header">
-      <h1>Hantar Dokumen untuk Verifikasi PD</h1>
-      <p>Pensyarah menghantar dokumen Fasa Perancangan atau Fasa Selepas Moderasi</p>
+    <div class="page-header no-print">
+      <h1>Borang Penghantaran Dokumen</h1>
+      <p>Isi borang di bawah. Semua medan bertanda * wajib diisi.</p>
     </div>
-    <form id="hantarForm" onsubmit="return submitForm(event)">
-      <div class="form-section">
-        <h3>Maklumat Am</h3>
-        <div class="form-row">
-          <div class="form-group"><label>IPG Kampus</label><input type="text" id="ipgKampus" class="form-control" placeholder="Cth: IPGK Darulaman" required></div>
-          <div class="form-group"><label>Program</label><select id="program" class="form-control"><option>PPISMP</option><option>PISMP</option><option>PDPP</option><option>PDPM</option><option>PITO</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Nama Kursus</label><input type="text" id="namaKursus" class="form-control" placeholder="Cth: Pentaksiran Dalam Pendidikan" required></div>
-          <div class="form-group"><label>Kod Kursus</label><input type="text" id="kodKursus" class="form-control" placeholder="Cth: EDUP3153" required></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Semester</label><select id="semester" class="form-control"><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option></select></div>
-          <div class="form-group"><label>Tahun</label><select id="tahun" class="form-control"><option value="1">Tahun 1</option><option value="2">Tahun 2</option><option value="3">Tahun 3</option><option value="4">Tahun 4</option></select></div>
-        </div>
+
+    <div class="doc-letterhead">
+      <svg class="crest" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="#EFF6FF" stroke="#0F172A" stroke-width="1.4"/>
+        <path d="M24 9 L38 16 L24 23 L10 16 Z" fill="#F2C14E" stroke="#0F172A" stroke-width="1"/>
+        <path d="M14 20.5 V29 C14 33.5 18.5 36.5 24 36.5 C29.5 36.5 34 33.5 34 29 V20.5" fill="none" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="38" cy="17" r="2" fill="#F2C14E" stroke="#0F172A" stroke-width=".8"/>
+      </svg>
+      <div class="lh-text">
+        <div class="lh-inst">Institut Pendidikan Guru Kampus Darulaman</div>
+        <div class="lh-sub">Kementerian Pendidikan Malaysia</div>
+        <div class="lh-dept">Jabatan Ilmu Pendidikan</div>
       </div>
-      <div class="form-section">
-        <h3>Maklumat Penghantar dan Pengesahan</h3>
-        <div class="form-row">
-          <div class="form-group"><label>Nama Pensyarah / Penyelaras Kursus</label><input type="text" id="namaPensyarah" class="form-control" required></div>
-          <div class="form-group"><label>Nama Pakar Bidang (SME)</label><input type="text" id="namaSME" class="form-control" placeholder="Jika ada"></div>
+      <div class="lh-right"></div>
+    </div>
+
+    <div class="doc-sheet">
+      <div class="doc-title">Borang Penghantaran Dokumen Pentaksiran Berterusan</div>
+      <div class="doc-subtitle">Sistem Verifikasi Pemeriksa Dalam (PD) &middot; Manual Kerja PD/SME/PKK/PPS 2022</div>
+
+      <form id="hantarForm" onsubmit="return submitForm(event)">
+        <div class="doc-section">
+          <div class="doc-section-title">A. Maklumat Kursus</div>
+          <div class="form-row">
+            <div class="form-group"><label>IPG Kampus *</label><input type="text" id="ipgKampus" class="form-control" value="IPG Kampus Darulaman" required></div>
+            <div class="form-group"><label>Program *</label><select id="program" class="form-control"><option>PPISMP</option><option selected>PISMP</option><option>PDPP</option><option>PDPM</option><option>PITO</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Nama Kursus *</label><input type="text" id="namaKursus" class="form-control" placeholder="Cth: Pentaksiran Dalam Pendidikan" required></div>
+            <div class="form-group"><label>Kod Kursus *</label><input type="text" id="kodKursus" class="form-control" placeholder="Cth: EDUP3153" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Semester *</label><select id="semester" class="form-control"><option value="1">Semester I</option><option value="2" selected>Semester II</option><option value="3">Semester III</option></select></div>
+            <div class="form-group"><label>Tahun *</label><select id="tahun" class="form-control"><option value="1">Tahun 1</option><option value="2" selected>Tahun 2</option><option value="3">Tahun 3</option><option value="4">Tahun 4</option></select></div>
+          </div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>Nama Ketua Jabatan Akademik (KJA)</label><input type="text" id="namaKJA" class="form-control" placeholder="Jika ada"></div>
+
+        <div class="doc-section">
+          <div class="doc-section-title">B. Maklumat Penghantar dan Pengesahan</div>
+          <div class="form-row">
+            <div class="form-group"><label>Nama Pensyarah / Penyelaras Kursus *</label><input type="text" id="namaPensyarah" class="form-control" required></div>
+            <div class="form-group"><label>Nama Pakar Bidang (SME)</label><input type="text" id="namaSME" class="form-control" placeholder="Jika berkenaan"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Nama Ketua Jabatan Akademik (KJA)</label><input type="text" id="namaKJA" class="form-control" placeholder="Jika berkenaan"></div>
+            <div class="form-group"><label>Tarikh Penghantaran</label><input type="text" class="form-control" value="" id="tarikhHantarDisplay" readonly placeholder="Auto"></div>
+          </div>
         </div>
-      </div>
-      <div class="form-section">
-        <h3>Fasa Verifikasi</h3>
-        <div class="fasa-selector">
-          <label class="radio-card"><input type="radio" name="fasa" value="perancangan" checked onchange="toggleFail()"> Fasa Perancangan</label>
-          <label class="radio-card"><input type="radio" name="fasa" value="selepas_moderasi" onchange="toggleFail()"> Fasa Selepas Moderasi</label>
+
+        <div class="doc-section">
+          <div class="doc-section-title">C. Fasa Verifikasi</div>
+          <div class="fasa-selector">
+            <label class="radio-card"><input type="radio" name="fasa" value="perancangan" checked onchange="toggleFail()"> Fasa Perancangan (Langkah 1&ndash;6)</label>
+            <label class="radio-card"><input type="radio" name="fasa" value="selepas_moderasi" onchange="toggleFail()"> Fasa Selepas Moderasi (Langkah 7&ndash;15)</label>
+          </div>
         </div>
-      </div>
-      <div class="form-section" id="fail-perancangan">
-        <h3>Dokumen Fasa Perancangan</h3>
-        <p class="hint">Carta alir langkah 1-6: JST, Soalan Tugasan, Skema Pemarkahan, Rubrik</p>
-        <div class="form-row">
-          <div class="form-group"><label>Jadual Spesifikasi Tugasan (JST)</label><input type="file" id="failJST" class="form-control-file" accept=".pdf,.docx,.doc"></div>
-          <div class="form-group"><label>Soalan Tugasan</label><input type="file" id="failSoalan" class="form-control-file" accept=".pdf,.docx,.doc"></div>
+
+        <div class="doc-section" id="fail-perancangan">
+          <div class="doc-section-title">D. Senarai Semakan Dokumen &mdash; Fasa Perancangan</div>
+          <p class="doc-note" style="margin-bottom:14px">Lampirkan empat dokumen berikut. Semua dalam format PDF, DOCX atau XLSX.</p>
+          <div class="form-row">
+            <div class="form-group"><label>1. Jadual Spesifikasi Tugasan (JST)</label><input type="file" id="failJST" class="form-control-file" accept=".pdf,.docx,.doc"></div>
+            <div class="form-group"><label>2. Soalan Tugasan</label><input type="file" id="failSoalan" class="form-control-file" accept=".pdf,.docx,.doc"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>3. Skema Pemarkahan</label><input type="file" id="failSkema" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+            <div class="form-group"><label>4. Rubrik Pemarkahan</label><input type="file" id="failRubrik" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+          </div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>Skema Pemarkahan</label><input type="file" id="failSkema" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
-          <div class="form-group"><label>Rubrik Pemarkahan</label><input type="file" id="failRubrik" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+
+        <div class="doc-section" id="fail-moderasi" style="display:none">
+          <div class="doc-section-title">D. Senarai Semakan Dokumen &mdash; Fasa Selepas Moderasi</div>
+          <p class="doc-note" style="margin-bottom:14px">Lampirkan borang LAM berikut. Semua dalam format PDF, DOCX atau XLSX.</p>
+          <div class="form-row">
+            <div class="form-group"><label>1. LAM-PT-04-01 (Borang Markah PB)</label><input type="file" id="failLAM01" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+            <div class="form-group"><label>2. LAM-PT-04-02 (Borang Moderasi)</label><input type="file" id="failLAM02" class="form-control-file" accept=".pdf,.docx"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>3. LAM-PT-04-03 (Laporan Panel Pemeriksa)</label><input type="file" id="failLAM03" class="form-control-file" accept=".pdf,.docx"></div>
+            <div class="form-group"><label>4. LAM-PT-04-04 (Laporan Kes Gagal)</label><input type="file" id="failLAM04" class="form-control-file" accept=".pdf,.docx"></div>
+          </div>
         </div>
-      </div>
-      <div class="form-section" id="fail-moderasi" style="display:none">
-        <h3>Dokumen Fasa Selepas Moderasi</h3>
-        <p class="hint">Carta alir langkah 7-15: LAM-PT-04-01, LAM-PT-04-02, LAM-PT-04-03, LAM-PT-04-04</p>
-        <div class="form-row">
-          <div class="form-group"><label>LAM-PT-04-01 (Borang Markah PB)</label><input type="file" id="failLAM01" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
-          <div class="form-group"><label>LAM-PT-04-02 (Borang Moderasi)</label><input type="file" id="failLAM02" class="form-control-file" accept=".pdf,.docx"></div>
+
+        <div class="doc-section">
+          <div class="doc-section-title">E. Pengakuan Penghantar</div>
+          <div class="form-group">
+            <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;line-height:1.6">
+              <input type="checkbox" id="akuan" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto">
+              <span>Saya mengaku bahawa semua maklumat dan dokumen yang dihantar adalah benar, lengkap dan telah disemak oleh Pakar Bidang (SME) serta disahkan oleh Ketua Jabatan Akademik. Saya faham dokumen tertakluk kepada Akta Rahsia Rasmi 1972.</span>
+            </label>
+          </div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>LAM-PT-04-03 (Laporan Panel Pemeriksa)</label><input type="file" id="failLAM03" class="form-control-file" accept=".pdf,.docx"></div>
-          <div class="form-group"><label>LAM-PT-04-04 (Laporan Kes Gagal)</label><input type="file" id="failLAM04" class="form-control-file" accept=".pdf,.docx"></div>
+
+        <div class="doc-sign">
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disediakan Oleh</div>
+            <div class="hint">Pensyarah / Penyelaras Kursus</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disemak Oleh</div>
+            <div class="hint">Pakar Bidang (SME)</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disahkan Oleh</div>
+            <div class="hint">Ketua Jabatan Akademik</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Diverifikasi Oleh</div>
+            <div class="hint">Pemeriksa Dalam (PD)</div>
+          </div>
         </div>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Hantar untuk Verifikasi PD</button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('dashboard')">Batal</button>
-      </div>
-    </form>
+
+        <div class="form-actions no-print" style="margin-top:26px">
+          <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Hantar untuk Verifikasi PD</button>
+          <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('dashboard')">Batal</button>
+        </div>
+      </form>
+    </div>
   </section>
 
   <!-- ==================== SENARAI ==================== -->
@@ -248,58 +397,110 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
 
   <!-- ==================== SEMAK ==================== -->
   <section id="page-semak" class="page">
-    <div class="page-header">
-      <h1 id="semak-title">Verifikasi Dokumen</h1>
+    <div class="page-header no-print">
+      <h1>Verifikasi Dokumen</h1>
       <p id="semak-info"></p>
-      <button class="btn btn-secondary btn-sm" onclick="showPage('senarai')">&larr; Kembali ke Senarai</button>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="showPage('senarai')">&larr; Kembali ke Senarai</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.print()">Cetak</button>
+      </div>
     </div>
+
     <div class="ai-bar no-print">
-      <button class="btn-ai" id="aiBtn" onclick="runAI()">Analisis AI DeepSeek</button>
-      <span class="ai-hint">AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh dan patuhan Manual Kerja, dan mengisi senarai semak secara automatik</span>
+      <button class="btn-ai" id="aiBtn" onclick="runAI()">Analisis AI</button>
+      <span class="ai-hint">AI membaca dokumen dari Google Drive, menyemak format, kandungan, tarikh dan patuhan Manual Kerja, kemudian mengisi senarai semak secara automatik.</span>
     </div>
-    <div class="detail-grid" id="detail-grid"></div>
-    <form id="verifikasiForm" onsubmit="return saveVerifikasi(event)">
-      <div class="form-section">
-        <h3 id="checklist-title">Senarai Semak</h3>
-        <table class="checklist-table">
-          <thead><tr><th style="width:30px">#</th><th>Item Semakan</th><th style="width:110px">Rujukan</th><th style="width:130px">Akur</th><th style="width:200px">Catatan</th></tr></thead>
-          <tbody id="checklist-body"></tbody>
-        </table>
+
+    <div class="doc-letterhead">
+      <svg class="crest" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="#EFF6FF" stroke="#0F172A" stroke-width="1.4"/>
+        <path d="M24 9 L38 16 L24 23 L10 16 Z" fill="#F2C14E" stroke="#0F172A" stroke-width="1"/>
+        <path d="M14 20.5 V29 C14 33.5 18.5 36.5 24 36.5 C29.5 36.5 34 33.5 34 29 V20.5" fill="none" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="38" cy="17" r="2" fill="#F2C14E" stroke="#0F172A" stroke-width=".8"/>
+      </svg>
+      <div class="lh-text">
+        <div class="lh-inst">Institut Pendidikan Guru Kampus Darulaman</div>
+        <div class="lh-sub">Kementerian Pendidikan Malaysia</div>
+        <div class="lh-dept">Borang Verifikasi Pemeriksa Dalam</div>
       </div>
-      <div class="form-section keputusan-section">
-        <h3>Keputusan Verifikasi PD</h3>
-        <div class="form-group"><label>Nama Pemeriksa Dalam (PD)</label><input type="text" id="namaPD" class="form-control" placeholder="Nama PD"></div>
-        <div class="form-group">
-          <label>Keputusan Verifikasi</label>
-          <div class="radio-group">
-            <label class="radio-card"><input type="radio" name="keputusan" value="lulus"> LULUS</label>
-            <label class="radio-card"><input type="radio" name="keputusan" value="perlu_pembetulan"> PERLU PEMBETULAN</label>
-            <label class="radio-card"><input type="radio" name="keputusan" value="tidak_lulus"> TIDAK LULUS</label>
+      <div class="lh-right"></div>
+    </div>
+
+    <div class="doc-sheet">
+      <div class="doc-title">Borang Verifikasi Dokumen Pentaksiran Berterusan</div>
+      <div class="doc-subtitle" id="semak-subtitle">Manual Kerja PD/SME/PKK/PPS 2022 (m/s 16&ndash;20)</div>
+
+      <div id="detail-grid"></div>
+
+      <form id="verifikasiForm">
+        <div class="doc-section">
+          <div class="doc-section-title" id="checklist-title">Senarai Semak Verifikasi</div>
+          <p class="doc-note" style="margin-bottom:14px">Tandakan <strong>satu</strong> pilihan bagi setiap item dan sertakan <strong>bukti</strong> (petikan atau rujukan muka surat) daripada dokumen yang disemak.</p>
+          <div class="vpb-summary-bar no-print" id="vpb-summary"></div>
+          <div id="checklist-body"></div>
+        </div>
+
+        <div class="doc-section">
+          <div class="doc-section-title">Keputusan Verifikasi</div>
+          <div class="form-group"><label>Nama Pemeriksa Dalam (PD) *</label><input type="text" id="namaPD" class="form-control" placeholder="Nama penuh dan jawatan"></div>
+          <div class="form-group">
+            <label>Keputusan *</label>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="keputusan" value="lulus"> LULUS</label>
+              <label class="radio-card"><input type="radio" name="keputusan" value="perlu_pembetulan"> PERLU PEMBETULAN</label>
+              <label class="radio-card"><input type="radio" name="keputusan" value="tidak_lulus"> TIDAK LULUS</label>
+            </div>
+          </div>
+          <div class="form-group"><label>KEKUATAN</label><textarea id="kekuatan" class="form-control" rows="4" placeholder="Senaraikan kekuatan dokumen yang disemak"></textarea></div>
+          <div class="form-group"><label>KELEMAHAN</label><textarea id="kelemahan" class="form-control" rows="4" placeholder="Senaraikan kelemahan yang ditemui"></textarea></div>
+          <div class="form-group"><label>CADANGAN PENAMBAHBAIKAN</label><textarea id="cadangan" class="form-control" rows="4" placeholder="Cadangan spesifik kepada pensyarah"></textarea></div>
+        </div>
+
+        <div class="doc-sign">
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disediakan Oleh</div>
+            <div class="hint">Pensyarah / Penyelaras Kursus</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disemak Oleh</div>
+            <div class="hint">Pakar Bidang (SME)</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Disahkan Oleh</div>
+            <div class="hint">Ketua Jabatan Akademik</div>
+          </div>
+          <div class="sig">
+            <div class="line"></div>
+            <div class="role">Diverifikasi Oleh</div>
+            <div class="hint">Pemeriksa Dalam (PD)</div>
           </div>
         </div>
-        <div class="form-group"><label>Ulasan Keseluruhan</label><textarea id="ulasan" class="form-control" rows="4"></textarea></div>
-        <div class="form-group"><label>Cadangan Penambahbaikan</label><textarea id="cadangan" class="form-control" rows="4"></textarea></div>
-      </div>
-      <div class="form-actions no-print">
-        <button type="submit" class="btn btn-primary btn-lg">Selesaikan Verifikasi</button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="window.print()">Cetak Laporan</button>
-      </div>
-    </form>
-    <div id="laporan-section" style="display:none">
-      <div class="form-section">
-        <h3>Ringkasan Patuhan</h3>
-        <div class="patuh-summary">
-          <div class="patuh-ring" id="patuh-ring"><div class="patuh-percent" id="patuh-percent">0%</div><div class="patuh-label">Patuh</div></div>
-          <div class="patuh-breakdown">
-            <div class="patuh-item"><span class="dot dot-green"></span>Ya: <span id="count-ya">0</span></div>
-            <div class="patuh-item"><span class="dot dot-red"></span>Tidak: <span id="count-tidak">0</span></div>
-            <div class="patuh-item"><span class="dot dot-grey"></span>Tidak Berkaitan: <span id="count-tb">0</span></div>
+
+        <div class="form-actions no-print" style="margin-top:26px">
+          <button type="button" class="btn btn-primary btn-lg" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
+          <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('senarai')">Kembali</button>
+        </div>
+      </form>
+
+      <div id="laporan-section" style="display:none">
+        <div class="doc-section">
+          <div class="doc-section-title">Ringkasan Patuhan</div>
+          <div class="patuh-summary">
+            <div class="patuh-ring" id="patuh-ring"><div class="patuh-percent" id="patuh-percent">0%</div><div class="patuh-label">Patuh</div></div>
+            <div class="patuh-breakdown">
+              <div class="patuh-item"><span class="dot dot-green"></span>Ya: <span id="count-ya">0</span></div>
+              <div class="patuh-item"><span class="dot dot-red"></span>Tidak: <span id="count-tidak">0</span></div>
+              <div class="patuh-item"><span class="dot dot-grey"></span>Tidak Berkaitan: <span id="count-tb">0</span></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-section">
-        <h3>Keputusan</h3>
-        <div class="keputusan-display" id="keputusan-display"></div>
+        <div class="doc-section">
+          <div class="doc-section-title">Keputusan Akhir</div>
+          <div class="keputusan-display" id="keputusan-display"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -376,7 +577,26 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
   </section>
 </main>
 
-<footer>Sistem Verifikasi PD IPG &middot; Buku Panduan Pentaksiran IPG 2026 &amp; Manual Kerja EOMS 2022 &middot; <span id="app-ver" style="font-size:12px;color:#94A3B8">v3</span></footer>
+<!-- Modal Log Masuk Admin -->
+<div class="modal-mask" id="adminModal">
+  <div class="modal-box">
+    <h3>Log Masuk Admin</h3>
+    <p class="modal-sub">Konfigurasi AI hanya boleh diakses oleh pentadbir sistem.</p>
+    <form onsubmit="return doAdminLogin(event)">
+      <div class="form-group">
+        <label for="adminPw">Kata Laluan</label>
+        <input type="password" id="adminPw" class="form-control" placeholder="Masukkan kata laluan admin" autocomplete="current-password" required>
+      </div>
+      <div id="admin-msg"></div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" style="flex:1">Log Masuk</button>
+        <button type="button" class="btn btn-secondary" onclick="closeAdminLogin()">Batal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>Sistem Verifikasi PD &middot; IPG Kampus Darulaman &middot; Buku Panduan Pentaksiran IPG 2026 &amp; Manual Kerja EOMS 2022 &middot; <span id="app-ver" style="font-size:12px;color:#94A3B8">v7</span></footer>
 
 <script>
 var BASE_URL='https://script.google.com/macros/s/AKfycbw2Dv-1TItt9_auP1rrgwjn_sgLFd27mriRDi7BXNohyvMav16gpzf-SSbsnrAnh_Ou/exec';
@@ -534,249 +754,332 @@ function submitForm(e){
   return false;
 }
 
-// ============ SEMAK ============
-var currentSubId=null;
-var currentChecklist=[];
+// ============ SEMAK (Borang VPB) ============
+var currentSubId = null;
+var currentChecklist = [];
+var currentSections = {};
+
 function openSemak(id){
-  currentSubId=id;
+  currentSubId = id;
   showPage('semak');
   loadSubmission();
 }
+
+function escq(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function loadSubmission(){
   api('getSubmission',{id:currentSubId}).then(function(res){
-    if(!res.success){showAlert(res.error||'Tidak dijumpai','error');return;}
-    var s=res.submission;
-    document.getElementById('semak-title').textContent='Verifikasi Dokumen';
-    document.getElementById('semak-info').innerHTML='<strong>ID:</strong> '+esc(s.ID)+' | <strong>Kursus:</strong> '+esc(s.Nama_Kursus)+' ('+esc(s.Kod_Kursus)+')';
-    var fb=s.Fasa==='perancangan'?'<span class="badge badge-blue">Fasa Perancangan ('+res.checklist.length+' item)</span>':'<span class="badge badge-purple">Fasa Selepas Moderasi ('+res.checklist.length+' item)</span>';
-    document.getElementById('checklist-title').innerHTML='Senarai Semak '+fb;
+    if(!res.success){ showAlert(res.error||'Tidak dijumpai','error'); return; }
+    var s = res.submission;
+    currentChecklist = res.checklist || [];
+    currentSections = res.sections || {};
 
-    var files='';
+    document.getElementById('semak-info').innerHTML = '<strong>ID:</strong> '+escq(s.ID)+' &middot; <strong>'+escq(s.Nama_Kursus)+'</strong> ('+escq(s.Kod_Kursus)+')';
+    document.getElementById('semak-subtitle').innerHTML = (s.Fasa==='perancangan'
+      ? 'Fasa Perancangan &middot; Borang VPB (JST, Soalan Tugasan, Rubrik Pemarkahan)'
+      : 'Fasa Selepas Moderasi &middot; Borang VPB (Prosedur Penyemakan)');
+
+    // Kop maklumat kursus
+    var files = '';
     if(s.Fasa==='perancangan'){
-      if(s.Fail_JST)files+='<li><a href="'+esc(s.Fail_JST)+'" target="_blank">JST</a></li>';
-      if(s.Fail_Soalan)files+='<li><a href="'+esc(s.Fail_Soalan)+'" target="_blank">Soalan Tugasan</a></li>';
-      if(s.Fail_Skema)files+='<li><a href="'+esc(s.Fail_Skema)+'" target="_blank">Skema Pemarkahan</a></li>';
-      if(s.Fail_Rubrik)files+='<li><a href="'+esc(s.Fail_Rubrik)+'" target="_blank">Rubrik</a></li>';
-    }else{
-      if(s.Fail_LAM01)files+='<li><a href="'+esc(s.Fail_LAM01)+'" target="_blank">LAM-PT-04-01</a></li>';
-      if(s.Fail_LAM02)files+='<li><a href="'+esc(s.Fail_LAM02)+'" target="_blank">LAM-PT-04-02</a></li>';
-      if(s.Fail_LAM03)files+='<li><a href="'+esc(s.Fail_LAM03)+'" target="_blank">LAM-PT-04-03</a></li>';
-      if(s.Fail_LAM04)files+='<li><a href="'+esc(s.Fail_LAM04)+'" target="_blank">LAM-PT-04-04</a></li>';
-    }
-    if(!files)files='<li style="color:var(--muted)">Tiada fail</li>';
-    var th=s.Tarikh_Hantar?new Date(s.Tarikh_Hantar).toLocaleString('ms-MY'):'-';
-    document.getElementById('detail-grid').innerHTML=
-      '<div class="detail-card"><h4>Maklumat Kursus</h4><table class="detail-table"><tr><td>IPG Kampus</td><td>'+esc(s.IPG_Kampus)+'</td></tr><tr><td>Program</td><td>'+esc(s.Program)+'</td></tr><tr><td>Kursus</td><td>'+esc(s.Nama_Kursus)+'</td></tr><tr><td>Kod</td><td>'+esc(s.Kod_Kursus)+'</td></tr><tr><td>Semester</td><td>'+esc(s.Semester)+'</td></tr><tr><td>Tahun</td><td>'+esc(s.Tahun)+'</td></tr></table></div>'+
-      '<div class="detail-card"><h4>Maklumat Penghantar</h4><table class="detail-table"><tr><td>Pensyarah</td><td>'+esc(s.Nama_Pensyarah)+'</td></tr><tr><td>SME</td><td>'+esc(s.Nama_SME||'-')+'</td></tr><tr><td>KJA</td><td>'+esc(s.Nama_KJA||'-')+'</td></tr><tr><td>Fasa</td><td>'+(s.Fasa==='perancangan'?'Perancangan':'Selepas Moderasi')+'</td></tr><tr><td>Tarikh</td><td>'+th+'</td></tr></table></div>'+
-      '<div class="detail-card"><h4>Dokumen</h4><ul class="file-list">'+files+'</ul></div>';
-
-    var rmap={};
-    res.results.forEach(function(r){rmap[r.itemNo]={jawapan:r.jawapan,catatan:r.catatan};});
-    currentChecklist=res.checklist;
-    var html='';
-    res.checklist.forEach(function(item){
-      var ex=rmap[item.no]||{};
-      var j=ex.jawapan||'';
-      var c=ex.catatan||'';
-      var rowClass=j==='tidak'?' class="row-warning"':j==='ya'?' class="row-ok"':'';
-      html+='<tr id="row-'+item.no+'"'+rowClass+'><td style="text-align:center">'+item.no+'</td><td>'+esc(item.item)+'</td><td style="text-align:center"><span class="ref">'+esc(item.ref)+'</span></td><td><select class="item-select" onchange="onSelect('+item.no+',this)"><option value="">-</option><option value="ya"'+(j==='ya'?' selected':'')+'>Ya</option><option value="tidak"'+(j==='tidak'?' selected':'')+'>Tidak</option><option value="tidak_berkaitan"'+(j==='tidak_berkaitan'?' selected':'')+'>Tidak Berkaitan</option></select></td><td><input type="text" class="catatan-input" value="'+esc(c)+'" placeholder="Catatan"></td></tr>';
-    });
-    document.getElementById('checklist-body').innerHTML=html;
-
-    if(s.Nama_PD&&s.Nama_PD!=='AI DeepSeek (Pra-isi)')document.getElementById('namaPD').value=s.Nama_PD;
-    if(s.Ulasan)document.getElementById('ulasan').value=s.Ulasan;
-    if(s.Cadangan)document.getElementById('cadangan').value=s.Cadangan;
-    if(s.Keputusan){var rad=document.querySelector('input[name="keputusan"][value="'+s.Keputusan+'"]');if(rad)rad.checked=true;}
-
-    // Show laporan ringkasan if selesai
-    if(s.Status==='selesai'&&s.Peratus_Patuhan){
-      document.getElementById('laporan-section').style.display='block';
-      var pct=s.Peratus_Patuhan;
-      document.getElementById('patuh-percent').textContent=pct+'%';
-      var ring=document.getElementById('patuh-ring');
-      ring.className='patuh-ring '+(pct>=80?'ring-green':pct>=50?'ring-orange':'ring-red');
-      var ya=0,tk=0,tb=0;
-      res.results.forEach(function(r){if(r.jawapan==='ya')ya++;else if(r.jawapan==='tidak')tk++;else if(r.jawapan==='tidak_berkaitan')tb++;});
-      document.getElementById('count-ya').textContent=ya;
-      document.getElementById('count-tidak').textContent=tk;
-      document.getElementById('count-tb').textContent=tb;
-      var kd=document.getElementById('keputusan-display');
-      if(s.Keputusan==='lulus'){kd.className='keputusan-display keputusan-lulus';kd.textContent='LULUS - Mematuhi standard';}
-      else if(s.Keputusan==='perlu_pembetulan'){kd.className='keputusan-display keputusan-pembetulan';kd.textContent='PERLU PEMBETULAN - Pematuhan dengan pembetulan';}
-      else{kd.className='keputusan-display keputusan-tolak';kd.textContent='TIDAK LULUS - Tidak mematuhi standard';}
-    }else{
-      document.getElementById('laporan-section').style.display='none';
-    }
-  });
-}
-function onSelect(no,sel){
-  var row=document.getElementById('row-'+no);
-  row.className=sel.value==='tidak'?'row-warning':sel.value==='ya'?'row-ok':'';
-}
-function runAI(){
-  var btn=document.getElementById('aiBtn');
-  btn.textContent='Analisis dijalankan... (30-90 saat)';
-  btn.disabled=true;
-  showLoading('AI sedang membaca dan menganalisis dokumen... (30-90 saat)');
-  api('aiAnalisis',{id:currentSubId}).then(function(res){
-    btn.textContent='Analisis AI DeepSeek';
-    btn.disabled=false;
-    hideLoading();
-    if(res.success){
-      showAlert(res.message+' Peratus patuhan: <strong>'+res.peratus+'%</strong>. Senarai semak telah diisi. Sila semak dan finalize.','success');
-      loadSubmission();
-    }else{
-      showAlert(res.error||'Ralat analisis','error');
-    }
-  }).catch(function(e){
-    btn.textContent='Analisis AI DeepSeek';
-    btn.disabled=false;
-    hideLoading();
-    showAlert('Ralat: '+e,'error');
-  });
-}
-function saveVerifikasi(e){
-  e.preventDefault();
-  var results=[];
-  currentChecklist.forEach(function(item){
-    var sel=document.querySelector('#row-'+item.no+' .item-select');
-    var cat=document.querySelector('#row-'+item.no+' .catatan-input');
-    results.push({no:item.no,item:item.item,ref:item.ref,jawapan:sel?sel.value:'',catatan:cat?cat.value:''});
-  });
-  var kep=document.querySelector('input[name="keputusan"]:checked');
-  if(!document.getElementById('namaPD').value.trim()){showAlert('Masukkan nama PD','error');return false;}
-  if(!kep){showAlert('Pilih keputusan verifikasi','error');return false;}
-  showLoading('Menyimpan verifikasi...');
-  api('saveVerifikasi',{
-    id:currentSubId,
-    namaPD:document.getElementById('namaPD').value,
-    keputusan:kep.value,
-    ulasan:document.getElementById('ulasan').value,
-    cadangan:document.getElementById('cadangan').value,
-    checklistResults:results
-  }).then(function(res){
-    hideLoading();
-    if(res.success){
-      showAlert(res.message+' Peratus patuhan: <strong>'+res.peratus+'%</strong>','success');
-      loadSubmission();
-      loadDashboard();
-    }else{
-      showAlert(res.error||'Ralat','error');
-    }
-  }).catch(function(e){hideLoading();showAlert('Ralat: '+e,'error');});
-  return false;
-}
-
-// ============ KONFIGURASI ============
-var PRESETS = {
-  rootsys:  {baseUrl:'https://rootsys.cloud/v1', model:'deepseek-v4.1-flash'},
-  deepseek: {baseUrl:'https://api.deepseek.com/v1', model:'deepseek-chat'},
-  gemini:   {baseUrl:'https://generativelanguage.googleapis.com/v1beta/openai', model:'gemini-2.0-flash'},
-  openai:   {baseUrl:'https://api.openai.com/v1', model:'gpt-4o-mini'},
-  custom:   {baseUrl:'', model:''}
-};
-
-function checkKeyStatus(){
-  api('getAIConfig',{}).then(function(res){
-    if(!res.success){
-      // Server belum dikemas kini — isi form dengan preset lalai supaya boleh guna terus
-      var pr0 = PRESETS.rootsys;
-      if(!document.getElementById('baseUrl').value) document.getElementById('baseUrl').value = pr0.baseUrl;
-      if(!document.getElementById('model').value) document.getElementById('model').value = pr0.model;
-      document.getElementById('status-box').innerHTML = '<div class="api-status api-missing"><span>Belum dikonfigurasi. Pilih penyedia dan masukkan API key.</span></div>';
-      document.getElementById('key-hint').textContent = 'Masukkan API key penyedia yang dipilih.';
-      return;
-    }
-    if(res.presets){for(var k in res.presets){PRESETS[k]=res.presets[k];}}
-
-    // Isi form dengan konfigurasi semasa
-    var sel = document.getElementById('provider');
-    if(res.provider && Array.from(sel.options).some(function(o){return o.value===res.provider;})){
-      sel.value = res.provider;
-    }
-    var bUrl = res.baseUrl || '';
-    var mdl = res.model || '';
-    if(!bUrl || !mdl){
-      var pr = PRESETS[res.provider || 'rootsys'] || PRESETS.rootsys;
-      bUrl = bUrl || pr.baseUrl;
-      mdl = mdl || pr.model;
-    }
-    document.getElementById('baseUrl').value = bUrl;
-    document.getElementById('model').value = mdl;
-
-    if(res.hasKey){
-      document.getElementById('status-box').innerHTML =
-        '<div class="api-status api-ok"><span><strong>Aktif</strong> &mdash; '+esc(res.provider)+' &middot; '+esc(res.model)+' &middot; key: '+esc(res.maskedKey)+'</span></div>';
-      document.getElementById('key-hint').textContent = 'Key sudah disimpan. Kosongkan untuk kekalkan, isi untuk tukar.';
+      if(s.Fail_JST) files += '<li><a href="'+escq(s.Fail_JST)+'" target="_blank">JST</a></li>';
+      if(s.Fail_Soalan) files += '<li><a href="'+escq(s.Fail_Soalan)+'" target="_blank">Soalan Tugasan</a></li>';
+      if(s.Fail_Skema) files += '<li><a href="'+escq(s.Fail_Skema)+'" target="_blank">Skema Pemarkahan</a></li>';
+      if(s.Fail_Rubrik) files += '<li><a href="'+escq(s.Fail_Rubrik)+'" target="_blank">Rubrik Pemarkahan</a></li>';
     } else {
-      document.getElementById('status-box').innerHTML =
-        '<div class="api-status api-missing"><span>API key belum disimpan. Masukkan di bawah.</span></div>';
-      document.getElementById('key-hint').textContent = 'Masukkan API key penyedia yang dipilih.';
+      if(s.Fail_LAM01) files += '<li><a href="'+escq(s.Fail_LAM01)+'" target="_blank">LAM-PT-04-01</a></li>';
+      if(s.Fail_LAM02) files += '<li><a href="'+escq(s.Fail_LAM02)+'" target="_blank">LAM-PT-04-02</a></li>';
+      if(s.Fail_LAM03) files += '<li><a href="'+escq(s.Fail_LAM03)+'" target="_blank">LAM-PT-04-03</a></li>';
+      if(s.Fail_LAM04) files += '<li><a href="'+escq(s.Fail_LAM04)+'" target="_blank">LAM-PT-04-04</a></li>';
     }
-  }).catch(function(e){
-    console.error('getAIConfig:',e);
-    var pr = PRESETS.rootsys;
-    if(!document.getElementById('baseUrl').value) document.getElementById('baseUrl').value = pr.baseUrl;
-    if(!document.getElementById('model').value) document.getElementById('model').value = pr.model;
-    document.getElementById('status-box').innerHTML = '<div class="api-status api-missing"><span>Belum dikonfigurasi. Pilih penyedia dan masukkan API key.</span></div>';
-  });
+    if(!files) files = '<li class="muted">Tiada fail</li>';
+
+    document.getElementById('detail-grid').innerHTML =
+      '<div class="doc-meta" style="margin-bottom:18px">' +
+        '<div class="row"><span class="k">IPG Kampus</span><span class="v">: '+escq(s.IPG_Kampus)+'</span></div>' +
+        '<div class="row"><span class="k">Kod Kursus</span><span class="v">: '+escq(s.Kod_Kursus)+'</span></div>' +
+        '<div class="row"><span class="k">Nama Kursus</span><span class="v">: '+escq(s.Nama_Kursus)+'</span></div>' +
+        '<div class="row"><span class="k">Program</span><span class="v">: '+escq(s.Program)+'</span></div>' +
+        '<div class="row"><span class="k">Tahun / Semester</span><span class="v">: Tahun '+escq(s.Tahun)+' / Sem '+escq(s.Semester)+'</span></div>' +
+        '<div class="row"><span class="k">Peperiksaan</span><span class="v">: '+(escq(s.Peperiksaan)||'&mdash;')+'</span></div>' +
+        '<div class="row"><span class="k">Nama Pensyarah</span><span class="v">: '+escq(s.Nama_Pensyarah)+'</span></div>' +
+        '<div class="row"><span class="k">Pemeriksa Dalam</span><span class="v">: '+(escq(s.Nama_PD)||'&mdash;')+'</span></div>' +
+      '</div>' +
+      '<div class="doc-section"><div class="doc-section-title">Dokumen Disemak</div><ul class="file-list">'+files+'</ul></div>';
+
+    // Kumpul hasil sedia ada
+    var rmap = {};
+    (res.results||[]).forEach(function(r){ rmap[String(r.itemNo)] = r; });
+
+    // Kumpul ikut seksyen (kekalkan susunan)
+    var order = [], groups = {};
+    currentChecklist.forEach(function(it){
+      if(order.indexOf(it.section) === -1){ order.push(it.section); groups[it.section] = []; }
+      groups[it.section].push(it);
+    });
+
+    var html2 = '';
+    order.forEach(function(sec){
+      html2 += '<div class="vpb-group"><div class="vpb-group-head">'+escq(currentSections[sec] || sec)+'</div>';
+      groups[sec].forEach(function(it){
+        var ex = rmap[String(it.no)] || null;
+        var selLabel = ex && ex.pilihan ? String(ex.pilihan) : '';
+        var bukti = ex && ex.bukti ? String(ex.bukti) : '';
+        var catatan = ex && ex.catatan ? String(ex.catatan) : '';
+        var hasEv = bukti.trim().length > 0;
+
+        html2 += '<div class="vpb-item '+(hasEv?'has-bukti':'no-bukti')+'" id="vpb-'+it.no+'">' +
+          '<div class="vpb-q"><span class="vpb-num">'+it.no+'</span><span>'+escq(it.item)+'</span></div>' +
+          '<div class="vpb-opts">';
+        it.options.forEach(function(o, idx){
+          var checked = (selLabel === o.label) ? ' checked' : '';
+          var cls = o.kind === 'P' ? 'positive' : (o.kind === 'NA' ? 'na' : 'negative');
+          html2 += '<label class="vpb-opt '+cls+(checked?' checked':'')+'" id="opt-'+it.no+'-'+idx+'">' +
+            '<input type="radio" name="vpb_'+it.no+'" value="'+idx+'" data-kind="'+o.kind+'" data-label="'+escq(o.label)+'" ' +
+            'onchange="onVpbSelect('+it.no+','+idx+',\''+o.kind+'\')"'+checked+'>' +
+            '<span>'+escq(o.label)+'</span></label>';
+        });
+        html2 += '</div>' +
+          '<div class="vpb-evidence">' +
+            '<label for="bukti-'+it.no+'">Bukti / Rujukan <span style="text-transform:none;font-weight:500;color:#B91C1C">(wajib)</span></label>' +
+            '<textarea id="bukti-'+it.no+'" rows="2" placeholder="Petikan daripada dokumen atau rujukan muka surat / seksyen..." oninput="onBukti(this,'+it.no+')">'+escq(bukti)+'</textarea>' +
+            '<div class="ev-warn'+(hasEv?'':'')+'" id="warn-'+it.no+'">Bukti diperlukan untuk item ini.</div>' +
+            '<label for="catatan-'+it.no+'" style="margin-top:8px">Catatan Pemeriksa</label>' +
+            '<input type="text" id="catatan-'+it.no+'" value="'+escq(catatan)+'" placeholder="Catatan tambahan (pilihan)">' +
+          '</div></div>';
+      });
+      html2 += '</div>';
+    });
+
+    document.getElementById('checklist-body').innerHTML = html2;
+
+    if(s.Nama_PD && s.Nama_PD.indexOf('AI (') !== 0) document.getElementById('namaPD').value = s.Nama_PD;
+    if(s.Kekuatan) document.getElementById('kekuatan').value = s.Kekuatan;
+    if(s.Kelemahan) document.getElementById('kelemahan').value = s.Kelemahan;
+    if(s.Cadangan) document.getElementById('cadangan').value = s.Cadangan;
+    if(s.Keputusan){ var rad = document.querySelector('input[name="keputusan"][value="'+s.Keputusan+'"]'); if(rad) rad.checked = true; }
+
+    updateVpbSummary();
+
+    // Ringkasan jika sudah selesai
+    if(s.Status==='selesai' && s.Peratus_Patuhan){
+      document.getElementById('laporan-section').style.display = 'block';
+      var pct = s.Peratus_Patuhan;
+      document.getElementById('patuh-percent').textContent = pct+'%';
+      document.getElementById('patuh-ring').className = 'patuh-ring '+(pct>=80?'ring-green':pct>=50?'ring-orange':'ring-red');
+      var ya=0, tk=0, tb=0;
+      (res.results||[]).forEach(function(r){
+        var k = String(r.kod||'').toUpperCase();
+        if(k==='P') ya++; else if(k==='N') tk++; else if(k==='NA') tb++;
+      });
+      document.getElementById('count-ya').textContent = ya;
+      document.getElementById('count-tidak').textContent = tk;
+      document.getElementById('count-tb').textContent = tb;
+      var kd = document.getElementById('keputusan-display');
+      if(s.Keputusan==='lulus'){ kd.className='keputusan-display keputusan-lulus'; kd.textContent='LULUS — Mematuhi standard'; }
+      else if(s.Keputusan==='perlu_pembetulan'){ kd.className='keputusan-display keputusan-pembetulan'; kd.textContent='PERLU PEMBETULAN'; }
+      else { kd.className='keputusan-display keputusan-tolak'; kd.textContent='TIDAK LULUS — Tidak mematuhi standard'; }
+    } else {
+      document.getElementById('laporan-section').style.display = 'none';
+    }
+  }).catch(function(e){ console.error(e); showAlert('Ralat memuatkan: '+e,'error'); });
 }
 
-function onProviderChange(){
-  var pr = PRESETS[document.getElementById('provider').value];
-  if(pr){
-    document.getElementById('baseUrl').value = pr.baseUrl;
-    document.getElementById('model').value = pr.model;
+function onVpbSelect(no, idx, kind){
+  var item = document.getElementById('vpb-'+no);
+  var opts = item.querySelectorAll('.vpb-opt');
+  for(var i=0;i<opts.length;i++){
+    opts[i].classList.toggle('checked', i===idx);
+  }
+  updateVpbSummary();
+}
+
+function onBukti(el, no){
+  var item = document.getElementById('vpb-'+no);
+  var warn = document.getElementById('warn-'+no);
+  var has = el.value.trim().length > 0;
+  item.classList.toggle('has-bukti', has);
+  item.classList.toggle('no-bukti', !has);
+  if(warn) warn.classList.toggle('show', !has);
+  updateVpbSummary();
+}
+
+function updateVpbSummary(){
+  var total = currentChecklist.length;
+  var answered = 0, withBukti = 0, patuh = 0, tidak = 0, tb = 0;
+  currentChecklist.forEach(function(it){
+    var sel = document.querySelector('input[name="vpb_'+it.no+'"]:checked');
+    var ev = document.getElementById('bukti-'+it.no);
+    if(sel){
+      answered++;
+      var k = sel.getAttribute('data-kind');
+      if(k==='P') patuh++; else if(k==='N') tidak++; else tb++;
+    }
+    if(ev && ev.value.trim()) withBukti++;
+  });
+  var el = document.getElementById('vpb-summary');
+  if(el){
+    el.innerHTML = '<div><span>Item</span><strong>'+total+'</strong></div>' +
+      '<div><span>Dijawab</span><strong>'+answered+'/'+total+'</strong></div>' +
+      '<div><span>Ada bukti</span><strong>'+withBukti+'/'+total+'</strong></div>' +
+      '<div><span>Patuh</span><strong>'+patuh+'</strong></div>' +
+      '<div><span>Tidak patuh</span><strong>'+tidak+'</strong></div>' +
+      '<div><span>Tidak berkenaan</span><strong>'+tb+'</strong></div>';
   }
 }
 
-function saveKey(e){
-  e.preventDefault();
-  var provider = document.getElementById('provider').value;
-  var baseUrl = document.getElementById('baseUrl').value.trim();
-  var model = document.getElementById('model').value.trim();
-  var key = document.getElementById('apiKey').value.trim();
+function saveVerifikasi(e){
+  if(e && e.preventDefault) e.preventDefault();
+  var namaPD = document.getElementById('namaPD').value.trim();
+  if(!namaPD){ showAlert('Masukkan nama Pemeriksa Dalam.','error'); return false; }
+  var kep = document.querySelector('input[name="keputusan"]:checked');
+  if(!kep){ showAlert('Pilih keputusan verifikasi.','error'); return false; }
 
-  if(!baseUrl){showAlert('Base URL diperlukan','error');return false;}
-  if(!model){showAlert('Model diperlukan','error');return false;}
+  var results = [], missing = [], noBukti = [];
+  currentChecklist.forEach(function(it){
+    var sel = document.querySelector('input[name="vpb_'+it.no+'"]:checked');
+    var ev = document.getElementById('bukti-'+it.no);
+    var cat = document.getElementById('catatan-'+it.no);
+    var buktiVal = ev ? ev.value.trim() : '';
+    if(!sel){ missing.push(it.no); }
+    if(!buktiVal){ noBukti.push(it.no); }
+    var idx = sel ? Number(sel.value) : -1;
+    var opt = idx >= 0 ? it.options[idx] : null;
+    results.push({
+      no: it.no, item: it.item, ref: it.section, seksyen: it.section,
+      pilihan: opt ? opt.label : '', kod: opt ? opt.kind : '',
+      jawapan: opt ? opt.kind : '', catatan: cat ? cat.value : '', bukti: buktiVal
+    });
+  });
 
-  var payload = {provider:provider, baseUrl:baseUrl, model:model};
-  if(key) payload.apiKey = key;
+  if(missing.length){ showAlert('Belum dijawab: item '+missing.join(', '),'error'); return false; }
+  if(noBukti.length){
+    if(!confirm('Item berikut belum ada bukti: '+noBukti.join(', ')+'\n\nTeruskan simpan?')) return false;
+  }
 
-  showLoading('Menyimpan konfigurasi...');
-  api('saveApiKey', payload).then(function(res){
-    hideLoading();
-    if(res.success){
-      showAlert(res.message+' ('+res.provider+' · '+res.model+')','success');
-      document.getElementById('apiKey').value = '';
-      checkKeyStatus();
-    } else {
-      showAlert(res.error||'Ralat','error');
-    }
-  }).catch(function(err){hideLoading();showAlert('Ralat: '+err,'error');});
-  return false;
-}
-
-function testKey(){
-  showLoading('Menguji sambungan AI...');
-  // Uji dengan nilai dalam form (termasuk key yang belum disimpan)
-  var payload = {
-    provider: document.getElementById('provider').value,
-    baseUrl: document.getElementById('baseUrl').value.trim(),
-    model: document.getElementById('model').value.trim()
-  };
-  var key = document.getElementById('apiKey').value.trim();
-  if(key) payload.apiKey = key;
-
-  api('testApiKey', payload).then(function(res){
+  showLoading('Menyimpan verifikasi...');
+  api('saveVerifikasi', {
+    id: currentSubId,
+    namaPD: namaPD,
+    keputusan: kep.value,
+    kekuatan: document.getElementById('kekuatan').value,
+    kelemahan: document.getElementById('kelemahan').value,
+    cadangan: document.getElementById('cadangan').value,
+    checklistResults: results
+  }).then(function(res){
     hideLoading();
     if(res.success){
       showAlert(res.message,'success');
-      checkKeyStatus();
+      loadSubmission();
+    } else { showAlert(res.error||'Ralat','error'); }
+  }).catch(function(err){ hideLoading(); showAlert('Ralat: '+err,'error'); });
+  return false;
+}
+
+function runAI(){
+  var btn = document.getElementById('aiBtn');
+  btn.textContent = 'Menganalisis... (30–90 saat)';
+  btn.disabled = true;
+  showLoading('AI membaca dokumen dan mengisi borang VPB...');
+  api('aiAnalisis',{id:currentSubId}).then(function(res){
+    btn.textContent = 'Analisis AI'; btn.disabled = false; hideLoading();
+    if(res.success){
+      showAlert(res.message + ' — semak setiap bukti sebelum mengesahkan.','success');
+      loadSubmission();
+    } else { showAlert(res.error||'Ralat analisis','error'); }
+  }).catch(function(e){
+    btn.textContent = 'Analisis AI'; btn.disabled = false; hideLoading();
+    showAlert('Ralat: '+e,'error');
+  });
+}
+
+// ============ ADMIN AUTH ============
+var ADMIN_TOKEN = null;
+
+function openAdminLogin(){
+  document.getElementById('admin-msg').innerHTML = '';
+  document.getElementById('adminPw').value = '';
+  document.getElementById('adminModal').classList.add('show');
+  setTimeout(function(){document.getElementById('adminPw').focus();},100);
+}
+
+function closeAdminLogin(){
+  document.getElementById('adminModal').classList.remove('show');
+}
+
+function doAdminLogin(e){
+  e.preventDefault();
+  var pw = document.getElementById('adminPw').value;
+  if(!pw){return false;}
+  var msg = document.getElementById('admin-msg');
+  msg.innerHTML = '<div class="alert alert-success" style="font-size:13px">Mengesahkan...</div>';
+
+  api('loginAdmin', {password: pw}).then(function(res){
+    if(res.success){
+      ADMIN_TOKEN = res.token;
+      try{ sessionStorage.setItem('pd_admin', res.token); }catch(x){}
+      msg.innerHTML = '<div class="alert alert-success" style="font-size:13px">Log masuk berjaya.</div>';
+      setTimeout(function(){
+        closeAdminLogin();
+        applyAdminState();
+        showPage('konfigurasi');
+      }, 600);
     } else {
-      showAlert(res.error||'Sambungan gagal','error');
+      msg.innerHTML = '<div class="alert alert-error" style="font-size:13px">'+(res.error||'Kata laluan tidak sah')+'</div>';
     }
-  }).catch(function(e){hideLoading();showAlert('Ralat: '+e,'error');});
+  }).catch(function(e2){
+    msg.innerHTML = '<div class="alert alert-error" style="font-size:13px">Ralat: '+e2+'</div>';
+  });
+  return false;
+}
+
+function adminLogout(){
+  var t = ADMIN_TOKEN;
+  ADMIN_TOKEN = null;
+  try{ sessionStorage.removeItem('pd_admin'); }catch(x){}
+  if(t){ api('logoutAdmin', {token:t}).catch(function(){}); }
+  applyAdminState();
+  showPage('dashboard');
+  showAlert('Log keluar admin.','success');
+}
+
+function applyAdminState(){
+  var isAdmin = !!ADMIN_TOKEN;
+  var navK = document.getElementById('nav-konfigurasi');
+  if(navK){ navK.style.display = isAdmin ? '' : 'none'; }
+  var btn = document.getElementById('nav-admin');
+  if(btn){
+    btn.innerHTML = isAdmin ? 'Log Keluar Admin' : 'Log Masuk Admin';
+    btn.onclick = isAdmin ? adminLogout : openAdminLogin;
+  }
+}
+
+// Bungkus api() supaya token admin dihantar automatik pada tindakan sensitif
+var _apiCore = api;
+api = function(action, data){
+  data = data || {};
+  var sensitive = (action === 'getAIConfig' || action === 'saveApiKey' || action === 'testApiKey' || action === 'setAdminPassword');
+  if(sensitive && ADMIN_TOKEN) data.token = ADMIN_TOKEN;
+  return _apiCore(action, data).then(function(res){
+    if(res && res.needLogin){
+      ADMIN_TOKEN = null;
+      try{ sessionStorage.removeItem('pd_admin'); }catch(x){}
+      applyAdminState();
+      showAlert('Sesi admin tamat. Sila log masuk semula.','error');
+      openAdminLogin();
+    }
+    return res;
+  });
+};
+
+function restoreAdminSession(){
+  var t = null;
+  try{ t = sessionStorage.getItem('pd_admin'); }catch(x){}
+  if(!t){ applyAdminState(); return; }
+  api('checkAdmin', {token: t}).then(function(res){
+    if(res && res.success){ ADMIN_TOKEN = t; }
+    applyAdminState();
+  }).catch(function(){ applyAdminState(); });
 }
 
 // ============ INIT ============
@@ -795,6 +1098,9 @@ function armOverlayGuard(){
   var _hide=hideLoading;
   hideLoading=function(){clearTimeout(_overlayGuard);_hide();};
 })();
+restoreAdminSession();
+var _th = document.getElementById('tarikhHantarDisplay');
+if(_th){ _th.value = new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'}); }
 showPage('dashboard');
 </script>
 </body>
