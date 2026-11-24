@@ -1,1 +1,673 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Verifikasi PD IPG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+:root{--primary:#0F172A;--accent:#0369A1;--bg:#F8FAFC;--card:#FFFFFF;--border:#E2E8F0;--muted:#475569;--surface:#E8ECF1;--success:#16A34A;--warning:#F59E0B;--danger:#DC2626}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--bg);color:#020617;line-height:1.5;font-size:16px;-webkit-font-smoothing:antialiased}
+.navbar{background:var(--primary);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.nav-brand{display:flex;align-items:center;gap:12px;font-family:'Lexend',sans-serif;font-weight:600;font-size:15px}
+.nav-brand .mark{width:32px;height:32px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;border-radius:4px}
+.nav-links{display:flex;flex-wrap:wrap}
+.nav-links button{background:none;border:none;color:rgba(255,255,255,.75);padding:10px 16px;font-size:14px;font-weight:500;min-height:44px;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent}
+.nav-links button:hover{color:#fff}
+.nav-links button.active{color:#fff;border-bottom-color:var(--accent)}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--muted);font-size:14px;margin-top:48px}
+h1{font-family:'Lexend',sans-serif;font-size:clamp(1.75rem,1rem+3vw,3rem);font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px}
+h2{font-family:'Lexend',sans-serif;font-size:1.5rem;font-weight:600;margin-bottom:12px}
+h3{font-family:'Lexend',sans-serif;font-size:1.25rem;font-weight:600;margin-bottom:12px}
+h4{font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;margin-bottom:8px}
+.page-header{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.subtitle,.page-header p{color:var(--muted);font-size:1.125rem}
+.page{display:none}
+.page.active{display:block}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.stat-value{font-family:'Lexend',sans-serif;font-size:2.5rem;font-weight:700;color:var(--primary);line-height:1}
+.stat-label{font-size:14px;color:var(--muted);font-weight:500}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 20px;min-height:44px;border:1px solid transparent;background:var(--primary);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:6px;text-decoration:none;transition:background .2s}
+.btn:hover{background:#334155}
+.btn-primary{background:var(--accent)}.btn-primary:hover{background:#075985}
+.btn-secondary{background:var(--card);color:#020617;border-color:var(--border)}.btn-secondary:hover{background:var(--surface)}
+.btn-sm{padding:6px 12px;min-height:36px;font-size:12px}
+.btn-lg{padding:14px 28px;min-height:48px;font-size:16px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.action-buttons{display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+th{background:var(--surface);padding:12px 16px;text-align:left;font-size:14px;font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top}
+tbody tr:hover{background:var(--surface)}
+.badge{display:inline-block;padding:3px 10px;font-size:12px;font-weight:600;border-radius:4px}
+.badge-blue{background:#DBEAFE;color:#1E40AF}.badge-purple{background:#EDE9FE;color:#5B21B6}
+.badge-green{background:#DCFCE7;color:#166534}.badge-orange{background:#FEF3C7;color:#92400E}
+.badge-red{background:#FEE2E2;color:#991B1B}.badge-grey{background:var(--surface);color:var(--muted)}
+.empty-state{text-align:center;padding:48px;color:var(--muted)}
+.empty-state p{margin-bottom:16px}
+.form-section{padding:24px 0;border-bottom:1px solid var(--border)}
+.form-section:last-of-type{border-bottom:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.form-control{width:100%;padding:10px 12px;min-height:44px;border:1px solid var(--border);background:var(--card);font-size:16px;font-family:inherit;border-radius:6px}
+.form-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(3,105,161,.15)}
+.form-control-file{width:100%;padding:8px;min-height:44px;border:1px solid var(--border);background:var(--surface);font-size:14px;border-radius:6px}
+.hint{color:var(--muted);font-size:14px;margin-bottom:12px}
+.form-actions{display:flex;gap:8px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.radio-card{flex:1;border:1px solid var(--border);padding:12px;cursor:pointer;border-radius:6px;text-align:center;font-size:14px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.radio-card:hover{border-color:#334155}
+.radio-card:has(input:checked){border-color:var(--accent);background:#EFF6FF}
+.radio-card input{margin-right:6px}
+.radio-group,.fasa-selector{display:flex;gap:8px;flex-wrap:wrap}
+.filter-bar{margin-bottom:16px}
+.filter-bar form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-select{padding:6px 10px;min-height:36px;font-size:14px;border:1px solid var(--border);border-radius:4px;font-family:inherit}
+.ai-bar{background:var(--primary);border-radius:8px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-ai{background:#fff;color:var(--primary);border:none;padding:10px 20px;min-height:44px;font-weight:700;font-size:14px;cursor:pointer;border-radius:6px;white-space:nowrap}
+.btn-ai:hover{background:var(--accent);color:#fff}
+.btn-ai:disabled{opacity:.5;cursor:wait}
+.ai-hint{color:rgba(255,255,255,.75);font-size:13px;line-height:1.5}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.detail-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.detail-card h4{font-size:14px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);color:var(--primary)}
+.detail-table{width:100%;border:none}.detail-table td{padding:5px 0;font-size:14px;border:none}
+.detail-table td:first-child{font-weight:600;color:var(--muted);width:40%}
+.file-list{list-style:none}.file-list li{padding:4px 0}
+.file-list a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:500}
+.checklist-table th{font-size:13px}
+.checklist-table td{font-size:13px}
+.item-select,.catatan-input{width:100%;padding:5px 6px;min-height:36px;border:1px solid var(--border);font-size:13px;font-family:inherit;background:var(--card);border-radius:4px}
+.item-select:focus,.catatan-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(3,105,161,.15)}
+.ref{color:var(--accent);font-weight:600;font-size:11px}
+.row-warning{background:#FEF3C7!important}
+.row-ok{background:#F0FDF4!important}
+.row-danger{background:#FEE2E2!important}
+.keputusan-section{background:var(--surface);border-radius:8px;padding:20px;margin-top:24px}
+.patuh-summary{display:flex;align-items:center;gap:20px}
+.patuh-ring{width:80px;height:80px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid}
+.ring-green{border-color:var(--success)}.ring-orange{border-color:var(--warning)}.ring-red{border-color:var(--danger)}
+.patuh-percent{font-family:'Lexend',sans-serif;font-size:18px;font-weight:700}
+.patuh-label{font-size:11px;color:var(--muted)}
+.patuh-breakdown{display:flex;flex-direction:column;gap:6px}
+.patuh-item{display:flex;align-items:center;gap:8px;font-size:14px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-green{background:var(--success)}.dot-red{background:var(--danger)}.dot-grey{background:var(--muted)}
+.keputusan-display{padding:14px 20px;font-family:'Lexend',sans-serif;font-size:18px;font-weight:700;text-align:center;margin-top:12px;border-radius:6px}
+.keputusan-lulus{background:#DCFCE7;color:#166534}.keputusan-pembetulan{background:#FEF3C7;color:#92400E}.keputusan-tolak{background:#FEE2E2;color:#991B1B}
+.ulasan-box{background:var(--surface);padding:16px;font-size:14px;white-space:pre-wrap;line-height:1.7;border-radius:6px}
+.api-status{padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:14px;border-radius:6px}
+.api-ok{background:#DCFCE7;color:#166534}.api-missing{background:#FEE2E2;color:#991B1B}
+.usage-guide,.ai-capabilities{padding-left:20px;line-height:1.8;font-size:14px}
+.usage-guide li,.ai-capabilities li{margin-bottom:4px}
+code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Courier New',monospace;border-radius:3px}
+.alert{padding:10px 14px;margin-bottom:16px;font-size:14px;border-radius:6px}
+.alert-success{background:#DCFCE7;color:#166534}.alert-error{background:#FEE2E2;color:#991B1B}
+#loading-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.9);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-size:18px;color:var(--primary)}
+#loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid var(--surface);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){.stats-grid,.detail-grid,.form-row{grid-template-columns:1fr}.navbar{height:auto;padding:12px}.nav-links button{padding:8px 10px;font-size:12px}}
+@media print{.navbar,footer,.no-print,.ai-bar,#loading-overlay{display:none!important}}
+</style>
+</head>
+<body>
+<div id="loading-overlay"><div class="spinner"></div><div id="loading-text">Sila tunggu...</div></div>
 
+<nav class="navbar">
+  <div class="nav-brand"><span class="mark">PD</span><span>Sistem Verifikasi Pemeriksa Dalam</span></div>
+  <div class="nav-links">
+    <button data-page="dashboard" class="active" onclick="showPage('dashboard')">Dashboard</button>
+    <button data-page="hantar" onclick="showPage('hantar')">Hantar Dokumen</button>
+    <button data-page="senarai" onclick="showPage('senarai')">Senarai Semakan</button>
+    <button data-page="konfigurasi" onclick="showPage('konfigurasi')">Konfigurasi AI</button>
+  </div>
+</nav>
+
+<main class="container">
+  <div id="alert-box"></div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <section id="page-dashboard" class="page active">
+    <div class="page-header">
+      <h1>Dashboard Verifikasi PD</h1>
+      <p>Institut Pendidikan Guru Malaysia</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-value" id="stat-perancangan">0</span><span class="stat-label">Fasa Perancangan</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-moderasi">0</span><span class="stat-label">Fasa Selepas Moderasi</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-selesai">0</span><span class="stat-label">Selesai Diverifikasi</span></div>
+      <div class="stat-card"><span class="stat-value" id="stat-menunggu">0</span><span class="stat-label">Menunggu Semakan</span></div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-primary btn-lg" onclick="showPage('hantar')">Hantar Dokumen Baru</button>
+      <button class="btn btn-secondary btn-lg" onclick="showPage('senarai')">Senarai Semakan</button>
+    </div>
+    <h2>Penghantaran Terkini</h2>
+    <div id="recent-table"><div class="empty-state"><p>Memuatkan...</p></div></div>
+  </section>
+
+  <!-- ==================== HANTAR ==================== -->
+  <section id="page-hantar" class="page">
+    <div class="page-header">
+      <h1>Hantar Dokumen untuk Verifikasi PD</h1>
+      <p>Pensyarah menghantar dokumen Fasa Perancangan atau Fasa Selepas Moderasi</p>
+    </div>
+    <form id="hantarForm" onsubmit="return submitForm(event)">
+      <div class="form-section">
+        <h3>Maklumat Am</h3>
+        <div class="form-row">
+          <div class="form-group"><label>IPG Kampus</label><input type="text" id="ipgKampus" class="form-control" placeholder="Cth: IPGK Darulaman" required></div>
+          <div class="form-group"><label>Program</label><select id="program" class="form-control"><option>PPISMP</option><option>PISMP</option><option>PDPP</option><option>PDPM</option><option>PITO</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Kursus</label><input type="text" id="namaKursus" class="form-control" placeholder="Cth: Pentaksiran Dalam Pendidikan" required></div>
+          <div class="form-group"><label>Kod Kursus</label><input type="text" id="kodKursus" class="form-control" placeholder="Cth: EDUP3153" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Semester</label><select id="semester" class="form-control"><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option></select></div>
+          <div class="form-group"><label>Tahun</label><select id="tahun" class="form-control"><option value="1">Tahun 1</option><option value="2">Tahun 2</option><option value="3">Tahun 3</option><option value="4">Tahun 4</option></select></div>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Maklumat Penghantar dan Pengesahan</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Pensyarah / Penyelaras Kursus</label><input type="text" id="namaPensyarah" class="form-control" required></div>
+          <div class="form-group"><label>Nama Pakar Bidang (SME)</label><input type="text" id="namaSME" class="form-control" placeholder="Jika ada"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Ketua Jabatan Akademik (KJA)</label><input type="text" id="namaKJA" class="form-control" placeholder="Jika ada"></div>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Fasa Verifikasi</h3>
+        <div class="fasa-selector">
+          <label class="radio-card"><input type="radio" name="fasa" value="perancangan" checked onchange="toggleFail()"> Fasa Perancangan</label>
+          <label class="radio-card"><input type="radio" name="fasa" value="selepas_moderasi" onchange="toggleFail()"> Fasa Selepas Moderasi</label>
+        </div>
+      </div>
+      <div class="form-section" id="fail-perancangan">
+        <h3>Dokumen Fasa Perancangan</h3>
+        <p class="hint">Carta alir langkah 1-6: JST, Soalan Tugasan, Skema Pemarkahan, Rubrik</p>
+        <div class="form-row">
+          <div class="form-group"><label>Jadual Spesifikasi Tugasan (JST)</label><input type="file" id="failJST" class="form-control-file" accept=".pdf,.docx,.doc"></div>
+          <div class="form-group"><label>Soalan Tugasan</label><input type="file" id="failSoalan" class="form-control-file" accept=".pdf,.docx,.doc"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Skema Pemarkahan</label><input type="file" id="failSkema" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+          <div class="form-group"><label>Rubrik Pemarkahan</label><input type="file" id="failRubrik" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+        </div>
+      </div>
+      <div class="form-section" id="fail-moderasi" style="display:none">
+        <h3>Dokumen Fasa Selepas Moderasi</h3>
+        <p class="hint">Carta alir langkah 7-15: LAM-PT-04-01, LAM-PT-04-02, LAM-PT-04-03, LAM-PT-04-04</p>
+        <div class="form-row">
+          <div class="form-group"><label>LAM-PT-04-01 (Borang Markah PB)</label><input type="file" id="failLAM01" class="form-control-file" accept=".pdf,.docx,.xlsx"></div>
+          <div class="form-group"><label>LAM-PT-04-02 (Borang Moderasi)</label><input type="file" id="failLAM02" class="form-control-file" accept=".pdf,.docx"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>LAM-PT-04-03 (Laporan Panel Pemeriksa)</label><input type="file" id="failLAM03" class="form-control-file" accept=".pdf,.docx"></div>
+          <div class="form-group"><label>LAM-PT-04-04 (Laporan Kes Gagal)</label><input type="file" id="failLAM04" class="form-control-file" accept=".pdf,.docx"></div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">Hantar untuk Verifikasi PD</button>
+        <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('dashboard')">Batal</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ==================== SENARAI ==================== -->
+  <section id="page-senarai" class="page">
+    <div class="page-header">
+      <h1>Senarai Semakan</h1>
+      <div class="filter-bar">
+        <form onsubmit="return false">
+          <select id="filterFasa" class="filter-select" onchange="loadList()">
+            <option value="">Semua Fasa</option>
+            <option value="perancangan">Fasa Perancangan</option>
+            <option value="selepas_moderasi">Fasa Selepas Moderasi</option>
+          </select>
+          <select id="filterStatus" class="filter-select" onchange="loadList()">
+            <option value="">Semua Status</option>
+            <option value="diterima">Menunggu</option>
+            <option value="selesai">Selesai</option>
+          </select>
+        </form>
+      </div>
+    </div>
+    <div id="table-container"><div class="empty-state"><p>Memuatkan...</p></div></div>
+  </section>
+
+  <!-- ==================== SEMAK ==================== -->
+  <section id="page-semak" class="page">
+    <div class="page-header">
+      <h1 id="semak-title">Verifikasi Dokumen</h1>
+      <p id="semak-info"></p>
+      <button class="btn btn-secondary btn-sm" onclick="showPage('senarai')">&larr; Kembali ke Senarai</button>
+    </div>
+    <div class="ai-bar no-print">
+      <button class="btn-ai" id="aiBtn" onclick="runAI()">Analisis AI DeepSeek</button>
+      <span class="ai-hint">AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh dan patuhan Manual Kerja, dan mengisi senarai semak secara automatik</span>
+    </div>
+    <div class="detail-grid" id="detail-grid"></div>
+    <form id="verifikasiForm" onsubmit="return saveVerifikasi(event)">
+      <div class="form-section">
+        <h3 id="checklist-title">Senarai Semak</h3>
+        <table class="checklist-table">
+          <thead><tr><th style="width:30px">#</th><th>Item Semakan</th><th style="width:110px">Rujukan</th><th style="width:130px">Akur</th><th style="width:200px">Catatan</th></tr></thead>
+          <tbody id="checklist-body"></tbody>
+        </table>
+      </div>
+      <div class="form-section keputusan-section">
+        <h3>Keputusan Verifikasi PD</h3>
+        <div class="form-group"><label>Nama Pemeriksa Dalam (PD)</label><input type="text" id="namaPD" class="form-control" placeholder="Nama PD"></div>
+        <div class="form-group">
+          <label>Keputusan Verifikasi</label>
+          <div class="radio-group">
+            <label class="radio-card"><input type="radio" name="keputusan" value="lulus"> LULUS</label>
+            <label class="radio-card"><input type="radio" name="keputusan" value="perlu_pembetulan"> PERLU PEMBETULAN</label>
+            <label class="radio-card"><input type="radio" name="keputusan" value="tidak_lulus"> TIDAK LULUS</label>
+          </div>
+        </div>
+        <div class="form-group"><label>Ulasan Keseluruhan</label><textarea id="ulasan" class="form-control" rows="4"></textarea></div>
+        <div class="form-group"><label>Cadangan Penambahbaikan</label><textarea id="cadangan" class="form-control" rows="4"></textarea></div>
+      </div>
+      <div class="form-actions no-print">
+        <button type="submit" class="btn btn-primary btn-lg">Selesaikan Verifikasi</button>
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.print()">Cetak Laporan</button>
+      </div>
+    </form>
+    <div id="laporan-section" style="display:none">
+      <div class="form-section">
+        <h3>Ringkasan Patuhan</h3>
+        <div class="patuh-summary">
+          <div class="patuh-ring" id="patuh-ring"><div class="patuh-percent" id="patuh-percent">0%</div><div class="patuh-label">Patuh</div></div>
+          <div class="patuh-breakdown">
+            <div class="patuh-item"><span class="dot dot-green"></span>Ya: <span id="count-ya">0</span></div>
+            <div class="patuh-item"><span class="dot dot-red"></span>Tidak: <span id="count-tidak">0</span></div>
+            <div class="patuh-item"><span class="dot dot-grey"></span>Tidak Berkaitan: <span id="count-tb">0</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-section">
+        <h3>Keputusan</h3>
+        <div class="keputusan-display" id="keputusan-display"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== KONFIGURASI ==================== -->
+  <section id="page-konfigurasi" class="page">
+    <div class="page-header">
+      <h1>Konfigurasi AI DeepSeek</h1>
+      <p>Masukkan API key DeepSeek untuk mengaktifkan analisis dokumen automatik</p>
+    </div>
+    <div class="form-section">
+      <h3>Status API Key</h3>
+      <div id="status-box"><div class="api-status api-missing"><span>Memuatkan...</span></div></div>
+    </div>
+    <form id="keyForm" onsubmit="return saveKey(event)">
+      <div class="form-section">
+        <div class="form-group">
+          <label for="apiKey">DeepSeek API Key</label>
+          <input type="password" id="apiKey" class="form-control" placeholder="sk-..." autocomplete="off">
+          <p class="hint">Dapatkan API key di <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a></p>
+        </div>
+        <button type="submit" class="btn btn-primary">Simpan API Key</button>
+        <button type="button" class="btn btn-secondary" onclick="testKey()">Uji Sambungan</button>
+      </div>
+    </form>
+    <div class="form-section">
+      <h3>Cara Penggunaan</h3>
+      <ol class="usage-guide">
+        <li>Masukkan API key DeepSeek dan klik Simpan</li>
+        <li>Pensyarah menghantar dokumen PB di halaman Hantar Dokumen</li>
+        <li>PD buka Senarai Semakan, klik Semak pada dokumen, kemudian klik Analisis AI DeepSeek</li>
+        <li>AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh, dan patuhan Manual Kerja</li>
+        <li>AI mengisi senarai semak 21 item (Fasa Perancangan) atau 12 item (Fasa Selepas Moderasi) secara automatik</li>
+        <li>PD semak keputusan AI, ubah suai jika perlu, dan klik Selesaikan Verifikasi</li>
+        <li>Laporan dijana dengan peratus patuhan dan cadangan penambahbaikan</li>
+      </ol>
+    </div>
+    <div class="form-section">
+      <h3>Apa yang AI Semak</h3>
+      <ul class="ai-capabilities">
+        <li><strong>Format JST</strong> — semua komponen wajib ada (Manual Kerja m/s 16)</li>
+        <li><strong>HPK dan Objektif</strong> — sejajar MK, objektif memenuhi HPK (m/s 16)</li>
+        <li><strong>Wajaran markah</strong> — mengikut MK (m/s 16)</li>
+        <li><strong>Stimulus + Soalan + Arahan</strong> — 3 elemen tugasan (m/s 17)</li>
+        <li><strong>KPPB</strong> — Merungkai, Merangkai, Backward Design, 6C (m/s 17)</li>
+        <li><strong>KBAT</strong> — aras mengaplikasi, menganalisis, menilai, mencipta (m/s 17)</li>
+        <li><strong>Domain diuji</strong> — kognitif, psikomotor, afektif, KI (m/s 17)</li>
+        <li><strong>Semakan SME</strong> — tanda tangan dan Laporan SME (m/s 17)</li>
+        <li><strong>Rubrik selari JST</strong> — holistik atau analitik dengan deskriptor domain (m/s 17-18)</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>Sistem Verifikasi PD IPG &middot; Buku Panduan Pentaksiran IPG 2026 &amp; Manual Kerja EOMS 2022</footer>
+
+<script>
+var BASE_URL='https://script.google.com/macros/s/AKfycbw2Dv-1TItt9_auP1rrgwjn_sgLFd27mriRDi7BXNohyvMav16gpzf-SSbsnrAnh_Ou/exec';
+
+// ============ NAVIGATION ============
+function showPage(name){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-links button').forEach(function(b){b.classList.toggle('active',b.dataset.page===name);});
+  window.scrollTo(0,0);
+  if(name==='dashboard')loadDashboard();
+  if(name==='senarai')loadList();
+  if(name==='konfigurasi')checkKeyStatus();
+}
+
+// ============ API HELPER ============
+function api(action,data){
+  return fetch(BASE_URL+'?action='+action,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(data||{})
+  }).then(function(r){return r.json();});
+}
+function showLoading(msg){
+  document.getElementById('loading-text').textContent=msg||'Sila tunggu...';
+  document.getElementById('loading-overlay').classList.add('show');
+}
+function hideLoading(){document.getElementById('loading-overlay').classList.remove('show');}
+function showAlert(msg,type){
+  var cls=type==='error'?'alert-error':'alert-success';
+  document.getElementById('alert-box').innerHTML='<div class="alert '+cls+'">'+msg+'</div>';
+  window.scrollTo(0,0);
+  setTimeout(function(){document.getElementById('alert-box').innerHTML='';},8000);
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ============ DASHBOARD ============
+function loadDashboard(){
+  api('getStats',{}).then(function(res){
+    if(res.success){
+      document.getElementById('stat-perancangan').textContent=res.stats.perancangan;
+      document.getElementById('stat-moderasi').textContent=res.stats.moderasi;
+      document.getElementById('stat-selesai').textContent=res.stats.selesai;
+      document.getElementById('stat-menunggu').textContent=res.stats.menunggu;
+    }
+  });
+  api('getSubmissions',{}).then(function(res){
+    if(res.success&&res.submissions.length>0){
+      var html='<table><thead><tr><th>ID</th><th>Kursus</th><th>Fasa</th><th>Pensyarah</th><th>Status</th><th>Tarikh</th><th>Tindakan</th></tr></thead><tbody>';
+      res.submissions.slice(-10).reverse().forEach(function(s){
+        html+='<tr>'+rowCells(s)+'</tr>';
+      });
+      html+='</tbody></table>';
+      document.getElementById('recent-table').innerHTML=html;
+    }else{
+      document.getElementById('recent-table').innerHTML='<div class="empty-state"><p>Tiada penghantaran lagi.</p></div>';
+    }
+  });
+}
+
+// ============ SENARAI ============
+function loadList(){
+  var data={};
+  var f=document.getElementById('filterFasa').value;
+  var s=document.getElementById('filterStatus').value;
+  if(f)data.fasa=f;
+  if(s)data.status=s;
+  api('getSubmissions',data).then(function(res){
+    if(res.success&&res.submissions.length>0){
+      var html='<table><thead><tr><th>ID</th><th>Kursus</th><th>Fasa</th><th>Pensyarah</th><th>Status</th><th>Peratus</th><th>Tindakan</th></tr></thead><tbody>';
+      res.submissions.forEach(function(sub){html+='<tr>'+rowCells(sub)+'</tr>';});
+      html+='</tbody></table>';
+      document.getElementById('table-container').innerHTML=html;
+    }else{
+      document.getElementById('table-container').innerHTML='<div class="empty-state"><p>Tiada dokumen dalam senarai ini.</p><button class="btn btn-primary" onclick="showPage(\'hantar\')">Hantar Dokumen Baru</button></div>';
+    }
+  });
+}
+function rowCells(s){
+  var fb=s.Fasa==='perancangan'?'<span class="badge badge-blue">Perancangan</span>':'<span class="badge badge-purple">Moderasi</span>';
+  var sb='';
+  if(s.Status==='diterima')sb='<span class="badge badge-orange">Menunggu</span>';
+  else if(s.Status==='selesai')sb='<span class="badge badge-green">Selesai</span>';
+  else sb='<span class="badge badge-grey">'+esc(s.Status)+'</span>';
+  var pct=s.Peratus_Patuhan?'<span class="badge badge-green">'+s.Peratus_Patuhan+'%</span>':'-';
+  var t=s.Tarikh_Hantar?new Date(s.Tarikh_Hantar).toLocaleDateString('ms-MY'):'-';
+  return '<td><strong>'+esc(s.ID)+'</strong></td><td>'+esc(s.Nama_Kursus)+'<br><small>'+esc(s.Kod_Kursus)+'</small></td><td>'+fb+'</td><td>'+esc(s.Nama_Pensyarah)+'</td><td>'+sb+'</td><td>'+pct+'</td><td><button class="btn btn-primary btn-sm" onclick="openSemak(\''+esc(s.ID)+'\')">Semak</button></td>';
+}
+
+// ============ HANTAR ============
+function toggleFail(){
+  var fasa=document.querySelector('input[name="fasa"]:checked').value;
+  document.getElementById('fail-perancangan').style.display=fasa==='perancangan'?'':'none';
+  document.getElementById('fail-moderasi').style.display=fasa==='selepas_moderasi'?'':'none';
+}
+function readB64(input){
+  if(!input.files[0])return Promise.resolve(null);
+  return new Promise(function(resolve){
+    var r=new FileReader();
+    r.onload=function(e){resolve({name:input.files[0].name,mimeType:input.files[0].type,content:e.target.result.split(',')[1]});};
+    r.readAsDataURL(input.files[0]);
+  });
+}
+function submitForm(e){
+  e.preventDefault();
+  showLoading('Sedang menghantar dokumen...');
+  var fasa=document.querySelector('input[name="fasa"]:checked').value;
+  var data={
+    ipgKampus:document.getElementById('ipgKampus').value,
+    program:document.getElementById('program').value,
+    namaKursus:document.getElementById('namaKursus').value,
+    kodKursus:document.getElementById('kodKursus').value,
+    semester:document.getElementById('semester').value,
+    tahun:document.getElementById('tahun').value,
+    namaPensyarah:document.getElementById('namaPensyarah').value,
+    namaSME:document.getElementById('namaSME').value,
+    namaKJA:document.getElementById('namaKJA').value,
+    fasa:fasa
+  };
+  var ids=fasa==='perancangan'?['JST','Soalan','Skema','Rubrik']:['LAM01','LAM02','LAM03','LAM04'];
+  var keys=['fail'+ids[0],'fail'+ids[1],'fail'+ids[2],'fail'+ids[3]];
+  var promises=ids.map(function(id,i){
+    return readB64(document.getElementById('fail'+id)).then(function(f){if(f)data[keys[i]]=f;});
+  });
+  Promise.all(promises).then(function(){
+    return api('submit',data);
+  }).then(function(res){
+    hideLoading();
+    if(res.success){
+      showAlert(res.message+' ID: <strong>'+res.id+'</strong>','success');
+      document.getElementById('hantarForm').reset();
+      toggleFail();
+      loadDashboard();
+      setTimeout(function(){showPage('senarai');},2000);
+    }else{
+      showAlert(res.error||'Ralat tidak diketahui','error');
+    }
+  }).catch(function(err){
+    hideLoading();
+    showAlert('Ralat: '+err,'error');
+  });
+  return false;
+}
+
+// ============ SEMAK ============
+var currentSubId=null;
+var currentChecklist=[];
+function openSemak(id){
+  currentSubId=id;
+  showPage('semak');
+  loadSubmission();
+}
+function loadSubmission(){
+  api('getSubmission',{id:currentSubId}).then(function(res){
+    if(!res.success){showAlert(res.error||'Tidak dijumpai','error');return;}
+    var s=res.submission;
+    document.getElementById('semak-title').textContent='Verifikasi Dokumen';
+    document.getElementById('semak-info').innerHTML='<strong>ID:</strong> '+esc(s.ID)+' | <strong>Kursus:</strong> '+esc(s.Nama_Kursus)+' ('+esc(s.Kod_Kursus)+')';
+    var fb=s.Fasa==='perancangan'?'<span class="badge badge-blue">Fasa Perancangan ('+res.checklist.length+' item)</span>':'<span class="badge badge-purple">Fasa Selepas Moderasi ('+res.checklist.length+' item)</span>';
+    document.getElementById('checklist-title').innerHTML='Senarai Semak '+fb;
+
+    var files='';
+    if(s.Fasa==='perancangan'){
+      if(s.Fail_JST)files+='<li><a href="'+esc(s.Fail_JST)+'" target="_blank">JST</a></li>';
+      if(s.Fail_Soalan)files+='<li><a href="'+esc(s.Fail_Soalan)+'" target="_blank">Soalan Tugasan</a></li>';
+      if(s.Fail_Skema)files+='<li><a href="'+esc(s.Fail_Skema)+'" target="_blank">Skema Pemarkahan</a></li>';
+      if(s.Fail_Rubrik)files+='<li><a href="'+esc(s.Fail_Rubrik)+'" target="_blank">Rubrik</a></li>';
+    }else{
+      if(s.Fail_LAM01)files+='<li><a href="'+esc(s.Fail_LAM01)+'" target="_blank">LAM-PT-04-01</a></li>';
+      if(s.Fail_LAM02)files+='<li><a href="'+esc(s.Fail_LAM02)+'" target="_blank">LAM-PT-04-02</a></li>';
+      if(s.Fail_LAM03)files+='<li><a href="'+esc(s.Fail_LAM03)+'" target="_blank">LAM-PT-04-03</a></li>';
+      if(s.Fail_LAM04)files+='<li><a href="'+esc(s.Fail_LAM04)+'" target="_blank">LAM-PT-04-04</a></li>';
+    }
+    if(!files)files='<li style="color:var(--muted)">Tiada fail</li>';
+    var th=s.Tarikh_Hantar?new Date(s.Tarikh_Hantar).toLocaleString('ms-MY'):'-';
+    document.getElementById('detail-grid').innerHTML=
+      '<div class="detail-card"><h4>Maklumat Kursus</h4><table class="detail-table"><tr><td>IPG Kampus</td><td>'+esc(s.IPG_Kampus)+'</td></tr><tr><td>Program</td><td>'+esc(s.Program)+'</td></tr><tr><td>Kursus</td><td>'+esc(s.Nama_Kursus)+'</td></tr><tr><td>Kod</td><td>'+esc(s.Kod_Kursus)+'</td></tr><tr><td>Semester</td><td>'+esc(s.Semester)+'</td></tr><tr><td>Tahun</td><td>'+esc(s.Tahun)+'</td></tr></table></div>'+
+      '<div class="detail-card"><h4>Maklumat Penghantar</h4><table class="detail-table"><tr><td>Pensyarah</td><td>'+esc(s.Nama_Pensyarah)+'</td></tr><tr><td>SME</td><td>'+esc(s.Nama_SME||'-')+'</td></tr><tr><td>KJA</td><td>'+esc(s.Nama_KJA||'-')+'</td></tr><tr><td>Fasa</td><td>'+(s.Fasa==='perancangan'?'Perancangan':'Selepas Moderasi')+'</td></tr><tr><td>Tarikh</td><td>'+th+'</td></tr></table></div>'+
+      '<div class="detail-card"><h4>Dokumen</h4><ul class="file-list">'+files+'</ul></div>';
+
+    var rmap={};
+    res.results.forEach(function(r){rmap[r.itemNo]={jawapan:r.jawapan,catatan:r.catatan};});
+    currentChecklist=res.checklist;
+    var html='';
+    res.checklist.forEach(function(item){
+      var ex=rmap[item.no]||{};
+      var j=ex.jawapan||'';
+      var c=ex.catatan||'';
+      var rowClass=j==='tidak'?' class="row-warning"':j==='ya'?' class="row-ok"':'';
+      html+='<tr id="row-'+item.no+'"'+rowClass+'><td style="text-align:center">'+item.no+'</td><td>'+esc(item.item)+'</td><td style="text-align:center"><span class="ref">'+esc(item.ref)+'</span></td><td><select class="item-select" onchange="onSelect('+item.no+',this)"><option value="">-</option><option value="ya"'+(j==='ya'?' selected':'')+'>Ya</option><option value="tidak"'+(j==='tidak'?' selected':'')+'>Tidak</option><option value="tidak_berkaitan"'+(j==='tidak_berkaitan'?' selected':'')+'>Tidak Berkaitan</option></select></td><td><input type="text" class="catatan-input" value="'+esc(c)+'" placeholder="Catatan"></td></tr>';
+    });
+    document.getElementById('checklist-body').innerHTML=html;
+
+    if(s.Nama_PD&&s.Nama_PD!=='AI DeepSeek (Pra-isi)')document.getElementById('namaPD').value=s.Nama_PD;
+    if(s.Ulasan)document.getElementById('ulasan').value=s.Ulasan;
+    if(s.Cadangan)document.getElementById('cadangan').value=s.Cadangan;
+    if(s.Keputusan){var rad=document.querySelector('input[name="keputusan"][value="'+s.Keputusan+'"]');if(rad)rad.checked=true;}
+
+    // Show laporan ringkasan if selesai
+    if(s.Status==='selesai'&&s.Peratus_Patuhan){
+      document.getElementById('laporan-section').style.display='block';
+      var pct=s.Peratus_Patuhan;
+      document.getElementById('patuh-percent').textContent=pct+'%';
+      var ring=document.getElementById('patuh-ring');
+      ring.className='patuh-ring '+(pct>=80?'ring-green':pct>=50?'ring-orange':'ring-red');
+      var ya=0,tk=0,tb=0;
+      res.results.forEach(function(r){if(r.jawapan==='ya')ya++;else if(r.jawapan==='tidak')tk++;else if(r.jawapan==='tidak_berkaitan')tb++;});
+      document.getElementById('count-ya').textContent=ya;
+      document.getElementById('count-tidak').textContent=tk;
+      document.getElementById('count-tb').textContent=tb;
+      var kd=document.getElementById('keputusan-display');
+      if(s.Keputusan==='lulus'){kd.className='keputusan-display keputusan-lulus';kd.textContent='LULUS - Mematuhi standard';}
+      else if(s.Keputusan==='perlu_pembetulan'){kd.className='keputusan-display keputusan-pembetulan';kd.textContent='PERLU PEMBETULAN - Pematuhan dengan pembetulan';}
+      else{kd.className='keputusan-display keputusan-tolak';kd.textContent='TIDAK LULUS - Tidak mematuhi standard';}
+    }else{
+      document.getElementById('laporan-section').style.display='none';
+    }
+  });
+}
+function onSelect(no,sel){
+  var row=document.getElementById('row-'+no);
+  row.className=sel.value==='tidak'?'row-warning':sel.value==='ya'?'row-ok':'';
+}
+function runAI(){
+  var btn=document.getElementById('aiBtn');
+  btn.textContent='Analisis dijalankan... (30-90 saat)';
+  btn.disabled=true;
+  showLoading('AI sedang membaca dan menganalisis dokumen... (30-90 saat)');
+  api('aiAnalisis',{id:currentSubId}).then(function(res){
+    btn.textContent='Analisis AI DeepSeek';
+    btn.disabled=false;
+    hideLoading();
+    if(res.success){
+      showAlert(res.message+' Peratus patuhan: <strong>'+res.peratus+'%</strong>. Senarai semak telah diisi. Sila semak dan finalize.','success');
+      loadSubmission();
+    }else{
+      showAlert(res.error||'Ralat analisis','error');
+    }
+  }).catch(function(e){
+    btn.textContent='Analisis AI DeepSeek';
+    btn.disabled=false;
+    hideLoading();
+    showAlert('Ralat: '+e,'error');
+  });
+}
+function saveVerifikasi(e){
+  e.preventDefault();
+  var results=[];
+  currentChecklist.forEach(function(item){
+    var sel=document.querySelector('#row-'+item.no+' .item-select');
+    var cat=document.querySelector('#row-'+item.no+' .catatan-input');
+    results.push({no:item.no,item:item.item,ref:item.ref,jawapan:sel?sel.value:'',catatan:cat?cat.value:''});
+  });
+  var kep=document.querySelector('input[name="keputusan"]:checked');
+  if(!document.getElementById('namaPD').value.trim()){showAlert('Masukkan nama PD','error');return false;}
+  if(!kep){showAlert('Pilih keputusan verifikasi','error');return false;}
+  showLoading('Menyimpan verifikasi...');
+  api('saveVerifikasi',{
+    id:currentSubId,
+    namaPD:document.getElementById('namaPD').value,
+    keputusan:kep.value,
+    ulasan:document.getElementById('ulasan').value,
+    cadangan:document.getElementById('cadangan').value,
+    checklistResults:results
+  }).then(function(res){
+    hideLoading();
+    if(res.success){
+      showAlert(res.message+' Peratus patuhan: <strong>'+res.peratus+'%</strong>','success');
+      loadSubmission();
+      loadDashboard();
+    }else{
+      showAlert(res.error||'Ralat','error');
+    }
+  }).catch(function(e){hideLoading();showAlert('Ralat: '+e,'error');});
+  return false;
+}
+
+// ============ KONFIGURASI ============
+function checkKeyStatus(){
+  api('testApiKey',{}).then(function(res){
+    if(res.success){
+      document.getElementById('status-box').innerHTML='<div class="api-status api-ok"><span>API key aktif dan sambungan berjaya.</span></div>';
+    }else{
+      document.getElementById('status-box').innerHTML='<div class="api-status api-missing"><span>API key belum disimpan atau tidak sah. Masukkan di bawah.</span></div>';
+    }
+  });
+}
+function saveKey(e){
+  e.preventDefault();
+  var key=document.getElementById('apiKey').value.trim();
+  if(!key){showAlert('Masukkan API key yang sah','error');return false;}
+  api('saveApiKey',{apiKey:key}).then(function(res){
+    if(res.success){
+      showAlert(res.message,'success');
+      document.getElementById('apiKey').value='';
+      checkKeyStatus();
+    }else{
+      showAlert(res.error||'Ralat','error');
+    }
+  });
+  return false;
+}
+function testKey(){
+  showAlert('Menguji sambungan...','success');
+  api('testApiKey',{}).then(function(res){
+    if(res.success){
+      showAlert('Sambungan berjaya.','success');
+      checkKeyStatus();
+    }else{
+      showAlert(res.error||'Sambungan gagal','error');
+    }
+  });
+}
+
+// ============ INIT ============
+showPage('dashboard');
+</script>
+</body>
+</html>
