@@ -5,6 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistem Verifikasi PD IPG</title>
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 :root{--primary:#0F172A;--accent:#0369A1;--bg:#F8FAFC;--card:#FFFFFF;--border:#E2E8F0;--muted:#475569;--surface:#E8ECF1;--success:#16A34A;--warning:#F59E0B;--danger:#DC2626}
@@ -255,7 +258,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
       <span class="ai-hint">AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh dan patuhan Manual Kerja, dan mengisi senarai semak secara automatik</span>
     </div>
     <div class="detail-grid" id="detail-grid"></div>
-    <form id="verifikasiForm">
+    <form id="verifikasiForm" onsubmit="return saveVerifikasi(event)">
       <div class="form-section">
         <h3 id="checklist-title">Senarai Semak</h3>
         <table class="checklist-table">
@@ -278,7 +281,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
         <div class="form-group"><label>Cadangan Penambahbaikan</label><textarea id="cadangan" class="form-control" rows="4"></textarea></div>
       </div>
       <div class="form-actions no-print">
-        <button type="button" class="btn btn-primary btn-lg" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
+        <button type="submit" class="btn btn-primary btn-lg">Selesaikan Verifikasi</button>
         <button type="button" class="btn btn-secondary btn-lg" onclick="window.print()">Cetak Laporan</button>
       </div>
     </form>
@@ -304,54 +307,76 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
   <!-- ==================== KONFIGURASI ==================== -->
   <section id="page-konfigurasi" class="page">
     <div class="page-header">
-      <h1>Konfigurasi AI DeepSeek</h1>
-      <p>Masukkan API key DeepSeek untuk mengaktifkan analisis dokumen automatik</p>
+      <h1>Konfigurasi AI</h1>
+      <p>Pilih penyedia AI dan masukkan API key. Sistem menyokong mana-mana API yang serasi OpenAI.</p>
     </div>
+
     <div class="form-section">
-      <h3>Status API Key</h3>
+      <h3>Status Semasa</h3>
       <div id="status-box"><div class="api-status api-missing"><span>Memuatkan...</span></div></div>
     </div>
+
     <form id="keyForm" onsubmit="return saveKey(event)">
       <div class="form-section">
+        <h3>Penyedia AI</h3>
         <div class="form-group">
-          <label for="apiKey">DeepSeek API Key</label>
-          <input type="password" id="apiKey" class="form-control" placeholder="sk-..." autocomplete="off">
-          <p class="hint">Dapatkan API key di <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com/api_keys</a></p>
+          <label for="provider">Pilih Penyedia</label>
+          <select id="provider" class="form-control" onchange="onProviderChange()">
+            <option value="rootsys">Rootys AI Gateway (percuma)</option>
+            <option value="deepseek">DeepSeek (berbayar)</option>
+            <option value="gemini">Google Gemini (free tier)</option>
+            <option value="openai">OpenAI</option>
+            <option value="custom">Lain-lain (OpenAI-compatible)</option>
+          </select>
         </div>
-        <button type="submit" class="btn btn-primary">Simpan API Key</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="baseUrl">Base URL</label>
+            <input type="text" id="baseUrl" class="form-control" placeholder="https://rootsys.cloud/v1">
+            <p class="hint">Contoh: https://rootsys.cloud/v1 &middot; https://api.deepseek.com/v1</p>
+          </div>
+          <div class="form-group">
+            <label for="model">Model</label>
+            <input type="text" id="model" class="form-control" placeholder="deepseek-v4.1-flash">
+            <p class="hint">Contoh: deepseek-v4.1-flash &middot; gemini-2.0-flash &middot; gpt-4o-mini</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="apiKey">API Key</label>
+          <input type="password" id="apiKey" class="form-control" placeholder="Masukkan API key" autocomplete="off">
+          <p class="hint" id="key-hint">Kosongkan jika tidak mahu tukar key sedia ada.</p>
+        </div>
+        <button type="submit" class="btn btn-primary">Simpan Konfigurasi</button>
         <button type="button" class="btn btn-secondary" onclick="testKey()">Uji Sambungan</button>
       </div>
     </form>
+
     <div class="form-section">
       <h3>Cara Penggunaan</h3>
       <ol class="usage-guide">
-        <li>Masukkan API key DeepSeek dan klik Simpan</li>
-        <li>Pensyarah menghantar dokumen PB di halaman Hantar Dokumen</li>
-        <li>PD buka Senarai Semakan, klik Semak pada dokumen, kemudian klik Analisis AI DeepSeek</li>
-        <li>AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh, dan patuhan Manual Kerja</li>
-        <li>AI mengisi senarai semak 21 item (Fasa Perancangan) atau 12 item (Fasa Selepas Moderasi) secara automatik</li>
-        <li>PD semak keputusan AI, ubah suai jika perlu, dan klik Selesaikan Verifikasi</li>
-        <li>Laporan dijana dengan peratus patuhan dan cadangan penambahbaikan</li>
+        <li>Pilih penyedia AI — Rootys percuma, Gemini ada free tier, DeepSeek berbayar murah</li>
+        <li>Masukkan API key dan klik Simpan Konfigurasi</li>
+        <li>Klik Uji Sambungan untuk pastikan key berfungsi</li>
+        <li>Pensyarah hantar dokumen di halaman Hantar Dokumen</li>
+        <li>PD buka Senarai Semakan &rarr; Semak &rarr; klik Analisis AI</li>
+        <li>AI membaca dokumen dari Google Drive dan mengisi senarai semak</li>
+        <li>PD semak, ubah suai jika perlu, klik Selesaikan Verifikasi</li>
       </ol>
     </div>
+
     <div class="form-section">
-      <h3>Apa yang AI Semak</h3>
+      <h3>Senarai Semak AI</h3>
       <ul class="ai-capabilities">
-        <li><strong>Format JST</strong> — semua komponen wajib ada (Manual Kerja m/s 16)</li>
-        <li><strong>HPK dan Objektif</strong> — sejajar MK, objektif memenuhi HPK (m/s 16)</li>
-        <li><strong>Wajaran markah</strong> — mengikut MK (m/s 16)</li>
-        <li><strong>Stimulus + Soalan + Arahan</strong> — 3 elemen tugasan (m/s 17)</li>
-        <li><strong>KPPB</strong> — Merungkai, Merangkai, Backward Design, 6C (m/s 17)</li>
-        <li><strong>KBAT</strong> — aras mengaplikasi, menganalisis, menilai, mencipta (m/s 17)</li>
-        <li><strong>Domain diuji</strong> — kognitif, psikomotor, afektif, KI (m/s 17)</li>
-        <li><strong>Semakan SME</strong> — tanda tangan dan Laporan SME (m/s 17)</li>
-        <li><strong>Rubrik selari JST</strong> — holistik atau analitik dengan deskriptor domain (m/s 17-18)</li>
+        <li><strong>Fasa Perancangan — 21 item</strong> (Manual Kerja PD m/s 16-18)</li>
+        <li><strong>Fasa Selepas Moderasi — 12 item</strong> (Manual Kerja PD m/s 19-20)</li>
+        <li>Format JST, HPK, wajaran, stimulus, KBAT, KPPB, rubrik dan deskriptor domain</li>
+        <li>Semakan kesesuaian tarikh dan patuhan Manual Kerja</li>
       </ul>
     </div>
   </section>
 </main>
 
-<footer>Sistem Verifikasi PD IPG &middot; Buku Panduan Pentaksiran IPG 2026 &amp; Manual Kerja EOMS 2022</footer>
+<footer>Sistem Verifikasi PD IPG &middot; Buku Panduan Pentaksiran IPG 2026 &amp; Manual Kerja EOMS 2022 &middot; <span id="app-ver" style="font-size:12px;color:#94A3B8">v3</span></footer>
 
 <script>
 var BASE_URL='https://script.google.com/macros/s/AKfycbw2Dv-1TItt9_auP1rrgwjn_sgLFd27mriRDi7BXNohyvMav16gpzf-SSbsnrAnh_Ou/exec';
@@ -611,8 +636,7 @@ function runAI(){
   });
 }
 function saveVerifikasi(e){
-  if(e&&e.preventDefault)e.preventDefault();
-  else if(e&&e.target&&e.target.tagName==='FORM')e.preventDefault();
+  e.preventDefault();
   var results=[];
   currentChecklist.forEach(function(item){
     var sel=document.querySelector('#row-'+item.no+' .item-select');
@@ -644,43 +668,133 @@ function saveVerifikasi(e){
 }
 
 // ============ KONFIGURASI ============
+var PRESETS = {
+  rootsys:  {baseUrl:'https://rootsys.cloud/v1', model:'deepseek-v4.1-flash'},
+  deepseek: {baseUrl:'https://api.deepseek.com/v1', model:'deepseek-chat'},
+  gemini:   {baseUrl:'https://generativelanguage.googleapis.com/v1beta/openai', model:'gemini-2.0-flash'},
+  openai:   {baseUrl:'https://api.openai.com/v1', model:'gpt-4o-mini'},
+  custom:   {baseUrl:'', model:''}
+};
+
 function checkKeyStatus(){
-  api('testApiKey',{}).then(function(res){
-    if(res.success){
-      document.getElementById('status-box').innerHTML='<div class="api-status api-ok"><span>API key aktif dan sambungan berjaya.</span></div>';
-    }else{
-      document.getElementById('status-box').innerHTML='<div class="api-status api-missing"><span>API key belum disimpan atau tidak sah. Masukkan di bawah.</span></div>';
+  api('getAIConfig',{}).then(function(res){
+    if(!res.success){
+      // Server belum dikemas kini — isi form dengan preset lalai supaya boleh guna terus
+      var pr0 = PRESETS.rootsys;
+      if(!document.getElementById('baseUrl').value) document.getElementById('baseUrl').value = pr0.baseUrl;
+      if(!document.getElementById('model').value) document.getElementById('model').value = pr0.model;
+      document.getElementById('status-box').innerHTML = '<div class="api-status api-missing"><span>Belum dikonfigurasi. Pilih penyedia dan masukkan API key.</span></div>';
+      document.getElementById('key-hint').textContent = 'Masukkan API key penyedia yang dipilih.';
+      return;
     }
-  });
-}
-function saveKey(e){
-  e.preventDefault();
-  var key=document.getElementById('apiKey').value.trim();
-  if(!key){showAlert('Masukkan API key yang sah','error');return false;}
-  api('saveApiKey',{apiKey:key}).then(function(res){
-    if(res.success){
-      showAlert(res.message,'success');
-      document.getElementById('apiKey').value='';
-      checkKeyStatus();
-    }else{
-      showAlert(res.error||'Ralat','error');
+    if(res.presets){for(var k in res.presets){PRESETS[k]=res.presets[k];}}
+
+    // Isi form dengan konfigurasi semasa
+    var sel = document.getElementById('provider');
+    if(res.provider && Array.from(sel.options).some(function(o){return o.value===res.provider;})){
+      sel.value = res.provider;
     }
-  });
-  return false;
-}
-function testKey(){
-  showAlert('Menguji sambungan...','success');
-  api('testApiKey',{}).then(function(res){
-    if(res.success){
-      showAlert('Sambungan berjaya.','success');
-      checkKeyStatus();
-    }else{
-      showAlert(res.error||'Sambungan gagal','error');
+    var bUrl = res.baseUrl || '';
+    var mdl = res.model || '';
+    if(!bUrl || !mdl){
+      var pr = PRESETS[res.provider || 'rootsys'] || PRESETS.rootsys;
+      bUrl = bUrl || pr.baseUrl;
+      mdl = mdl || pr.model;
     }
+    document.getElementById('baseUrl').value = bUrl;
+    document.getElementById('model').value = mdl;
+
+    if(res.hasKey){
+      document.getElementById('status-box').innerHTML =
+        '<div class="api-status api-ok"><span><strong>Aktif</strong> &mdash; '+esc(res.provider)+' &middot; '+esc(res.model)+' &middot; key: '+esc(res.maskedKey)+'</span></div>';
+      document.getElementById('key-hint').textContent = 'Key sudah disimpan. Kosongkan untuk kekalkan, isi untuk tukar.';
+    } else {
+      document.getElementById('status-box').innerHTML =
+        '<div class="api-status api-missing"><span>API key belum disimpan. Masukkan di bawah.</span></div>';
+      document.getElementById('key-hint').textContent = 'Masukkan API key penyedia yang dipilih.';
+    }
+  }).catch(function(e){
+    console.error('getAIConfig:',e);
+    var pr = PRESETS.rootsys;
+    if(!document.getElementById('baseUrl').value) document.getElementById('baseUrl').value = pr.baseUrl;
+    if(!document.getElementById('model').value) document.getElementById('model').value = pr.model;
+    document.getElementById('status-box').innerHTML = '<div class="api-status api-missing"><span>Belum dikonfigurasi. Pilih penyedia dan masukkan API key.</span></div>';
   });
 }
 
+function onProviderChange(){
+  var pr = PRESETS[document.getElementById('provider').value];
+  if(pr){
+    document.getElementById('baseUrl').value = pr.baseUrl;
+    document.getElementById('model').value = pr.model;
+  }
+}
+
+function saveKey(e){
+  e.preventDefault();
+  var provider = document.getElementById('provider').value;
+  var baseUrl = document.getElementById('baseUrl').value.trim();
+  var model = document.getElementById('model').value.trim();
+  var key = document.getElementById('apiKey').value.trim();
+
+  if(!baseUrl){showAlert('Base URL diperlukan','error');return false;}
+  if(!model){showAlert('Model diperlukan','error');return false;}
+
+  var payload = {provider:provider, baseUrl:baseUrl, model:model};
+  if(key) payload.apiKey = key;
+
+  showLoading('Menyimpan konfigurasi...');
+  api('saveApiKey', payload).then(function(res){
+    hideLoading();
+    if(res.success){
+      showAlert(res.message+' ('+res.provider+' · '+res.model+')','success');
+      document.getElementById('apiKey').value = '';
+      checkKeyStatus();
+    } else {
+      showAlert(res.error||'Ralat','error');
+    }
+  }).catch(function(err){hideLoading();showAlert('Ralat: '+err,'error');});
+  return false;
+}
+
+function testKey(){
+  showLoading('Menguji sambungan AI...');
+  // Uji dengan nilai dalam form (termasuk key yang belum disimpan)
+  var payload = {
+    provider: document.getElementById('provider').value,
+    baseUrl: document.getElementById('baseUrl').value.trim(),
+    model: document.getElementById('model').value.trim()
+  };
+  var key = document.getElementById('apiKey').value.trim();
+  if(key) payload.apiKey = key;
+
+  api('testApiKey', payload).then(function(res){
+    hideLoading();
+    if(res.success){
+      showAlert(res.message,'success');
+      checkKeyStatus();
+    } else {
+      showAlert(res.error||'Sambungan gagal','error');
+    }
+  }).catch(function(e){hideLoading();showAlert('Ralat: '+e,'error');});
+}
+
 // ============ INIT ============
+// Watchdog: overlay tidak boleh tersangkut selamanya walau API gagal
+var _overlayGuard=null;
+function armOverlayGuard(){
+  clearTimeout(_overlayGuard);
+  _overlayGuard=setTimeout(function(){
+    hideLoading();
+    showAlert('Sambungan perlahan atau gagal. Sila muat semula halaman (Ctrl+Shift+R).','error');
+  },45000);
+}
+(function(){
+  var _show=showLoading;
+  showLoading=function(m){_show(m);armOverlayGuard();};
+  var _hide=hideLoading;
+  hideLoading=function(){clearTimeout(_overlayGuard);_hide();};
+})();
 showPage('dashboard');
 </script>
 </body>
