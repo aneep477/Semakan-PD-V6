@@ -107,7 +107,7 @@ tbody tr:hover{background:var(--surface)}
 code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Courier New',monospace;border-radius:3px}
 .alert{padding:10px 14px;margin-bottom:16px;font-size:14px;border-radius:6px}
 .alert-success{background:#DCFCE7;color:#166534}.alert-error{background:#FEE2E2;color:#991B1B}
-#loading-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.9);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-size:18px;color:var(--primary)}
+#loading-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-size:18px;color:var(--primary)}
 #loading-overlay.show{display:flex}
 .spinner{width:40px;height:40px;border:4px solid var(--surface);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -255,7 +255,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
       <span class="ai-hint">AI membaca semua dokumen dari Google Drive, menyemak format, kandungan, tarikh dan patuhan Manual Kerja, dan mengisi senarai semak secara automatik</span>
     </div>
     <div class="detail-grid" id="detail-grid"></div>
-    <form id="verifikasiForm" onsubmit="return saveVerifikasi(event)">
+    <form id="verifikasiForm">
       <div class="form-section">
         <h3 id="checklist-title">Senarai Semak</h3>
         <table class="checklist-table">
@@ -278,7 +278,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
         <div class="form-group"><label>Cadangan Penambahbaikan</label><textarea id="cadangan" class="form-control" rows="4"></textarea></div>
       </div>
       <div class="form-actions no-print">
-        <button type="submit" class="btn btn-primary btn-lg">Selesaikan Verifikasi</button>
+        <button type="button" class="btn btn-primary btn-lg" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
         <button type="button" class="btn btn-secondary btn-lg" onclick="window.print()">Cetak Laporan</button>
       </div>
     </form>
@@ -372,8 +372,18 @@ function api(action,data){
   return fetch(BASE_URL+'?action='+action,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify(data||{})
-  }).then(function(r){return r.json();});
+    body:JSON.stringify(data||{}),
+    redirect:'follow',
+    mode:'cors'
+  }).then(function(r){
+    return r.text().then(function(t){
+      // GAS sometimes returns HTML wrapper on auth redirect — detect and fail cleanly
+      if(t.charAt(0)!=='{'&&t.charAt(0)!=='['){
+        throw new Error('Respons bukan JSON. Semak deployment GAS: Who has access mesti "Anyone".');
+      }
+      return JSON.parse(t);
+    });
+  });
 }
 function showLoading(msg){
   document.getElementById('loading-text').textContent=msg||'Sila tunggu...';
@@ -397,7 +407,7 @@ function loadDashboard(){
       document.getElementById('stat-selesai').textContent=res.stats.selesai;
       document.getElementById('stat-menunggu').textContent=res.stats.menunggu;
     }
-  });
+  }).catch(function(e){console.error('getStats:',e);});
   api('getSubmissions',{}).then(function(res){
     if(res.success&&res.submissions.length>0){
       var html='<table><thead><tr><th>ID</th><th>Kursus</th><th>Fasa</th><th>Pensyarah</th><th>Status</th><th>Tarikh</th><th>Tindakan</th></tr></thead><tbody>';
@@ -409,6 +419,9 @@ function loadDashboard(){
     }else{
       document.getElementById('recent-table').innerHTML='<div class="empty-state"><p>Tiada penghantaran lagi.</p></div>';
     }
+  }).catch(function(e){
+    console.error('getSubmissions:',e);
+    document.getElementById('recent-table').innerHTML='<div class="empty-state"><p>Ralat sambungan ke pelayan. Semak deployment GAS.</p></div>';
   });
 }
 
@@ -598,7 +611,8 @@ function runAI(){
   });
 }
 function saveVerifikasi(e){
-  e.preventDefault();
+  if(e&&e.preventDefault)e.preventDefault();
+  else if(e&&e.target&&e.target.tagName==='FORM')e.preventDefault();
   var results=[];
   currentChecklist.forEach(function(item){
     var sel=document.querySelector('#row-'+item.no+' .item-select');
