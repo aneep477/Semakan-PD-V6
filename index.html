@@ -337,17 +337,8 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
             <div class="form-group"><label>3. LAM-PT-04-03 (Laporan Panel Pemeriksa)</label><input type="file" id="failLAM03" class="form-control-file" accept=".pdf,.docx"></div>
             <div class="form-group"><label>4. LAM-PT-04-04 (Laporan Kes Gagal)</label><input type="file" id="failLAM04" class="form-control-file" accept=".pdf,.docx"></div>
           </div>
-        </div>
-
-        <div class="doc-section" id="vpb-hantar-wrap" style="display:none">
-          <div class="doc-section-title">E. Soalan Borang VPB</div>
-          <p class="doc-note" style="margin-bottom:14px">Jawab <strong>setiap</strong> soalan di bawah dan sertakan bukti. Pilihan bertanda <span style="color:#166534;font-weight:700">hijau</span> ialah pilihan mematuhi; <span style="color:#94A3B8;font-weight:700">kelabu</span> ialah Tidak Berkenaan.</p>
-          <div class="vpb-summary-bar" id="vpb-hantar-summary"></div>
-          <div id="vpb-hantar-body"></div>
-        </div>
-
-        <div class="doc-section">
-          <div class="doc-section-title">F. Pengakuan Penghantar</div>
+        </div><div class="doc-section">
+          <div class="doc-section-title">E. Pengakuan Penghantar</div>
           <div class="form-group">
             <label style="display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;line-height:1.6">
               <input type="checkbox" id="akuan" required style="margin-top:3px;width:16px;height:16px;flex:0 0 auto">
@@ -414,6 +405,9 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
     <div class="page-header no-print">
       <h1>Verifikasi Dokumen</h1>
       <p id="semak-info"></p>
+      <div id="pd-lock" class="admin-badge" style="display:none;background:#FEE2E2;color:#991B1B;margin-top:10px">
+        Hanya Pemeriksa Dalam boleh menanda borang. Sila log masuk pentadbir.
+      </div>
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-secondary btn-sm" onclick="showPage('senarai')">&larr; Kembali ke Senarai</button>
         <button class="btn btn-secondary btn-sm" onclick="window.print()">Cetak</button>
@@ -489,7 +483,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
         </div>
 
         <div class="form-actions no-print" style="margin-top:26px">
-          <button type="button" class="btn btn-primary btn-lg" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
+          <button type="button" class="btn btn-primary btn-lg" id="btn-save-verif" onclick="saveVerifikasi(event)">Selesaikan Verifikasi</button>
           <button type="button" class="btn btn-secondary btn-lg" onclick="showPage('senarai')">Kembali</button>
         </div>
       </form>
@@ -605,7 +599,7 @@ code{background:var(--surface);padding:2px 6px;font-size:12px;font-family:'Couri
   </div>
 </div>
 
-<footer>Sistem Verifikasi Pentaksiran Berterusan &middot; IPG Kampus Darulaman &middot; Pemeriksa Dalam: HANIFF FAIZAL BIN CHEK ANI &middot; <span id="app-ver" style="font-size:12px;color:#94A3B8">v9</span></footer>
+<footer>Sistem Verifikasi Pentaksiran Berterusan &middot; IPG Kampus Darulaman &middot; Pemeriksa Dalam: HANIFF FAIZAL BIN CHEK ANI &middot; <span id="app-ver" style="font-size:12px;color:#94A3B8">v10</span></footer>
 
 <script>
 var BASE_URL='https://script.google.com/macros/s/AKfycbw2Dv-1TItt9_auP1rrgwjn_sgLFd27mriRDi7BXNohyvMav16gpzf-SSbsnrAnh_Ou/exec';
@@ -709,214 +703,31 @@ function rowCells(s){
 }
 
 // ============ HANTAR ============
-// ============ HANTAR (Borang VPB) ============
-var HANTAR_CHECKLIST = [];
-var HANTAR_SECTIONS = {};
-var HANTAR_EV = {};
-var HANTAR_HINT = {};
-var HANTAR_FILES = {}; // no -> [{name,mimeType,content}]
-
+// ============ HANTAR (dokumen sahaja) ============
 function toggleFail(){
   var fasa = document.querySelector('input[name="fasa"]:checked').value;
   document.getElementById('fail-perancangan').style.display = (fasa==='perancangan') ? '' : 'none';
   document.getElementById('fail-moderasi').style.display = (fasa==='selepas_moderasi') ? '' : 'none';
-  loadHantarForm(fasa);
 }
 
-function loadHantarForm(fasa){
-  api('getChecklist', {fasa: fasa}).then(function(res){
-    if(!res || !res.success){ return; }
-    HANTAR_CHECKLIST = res.checklist || [];
-    HANTAR_SECTIONS  = res.sections || {};
-    HANTAR_EV        = res.evidenceType || {};
-    HANTAR_HINT      = res.evidenceHint || {};
-    HANTAR_FILES     = {};
-    renderHantarForm();
-  }).catch(function(){});
-}
-
-function renderHantarForm(){
-  var wrap = document.getElementById('vpb-hantar-wrap');
-  var body = document.getElementById('vpb-hantar-body');
-  if(!HANTAR_CHECKLIST.length){ wrap.style.display='none'; return; }
-  wrap.style.display = '';
-
-  var order = [], groups = {};
-  HANTAR_CHECKLIST.forEach(function(it){
-    if(order.indexOf(it.section) === -1){ order.push(it.section); groups[it.section] = []; }
-    groups[it.section].push(it);
+function readB64(input){
+  if(!input || !input.files || !input.files[0]) return Promise.resolve(null);
+  return new Promise(function(resolve){
+    var r = new FileReader();
+    r.onload = function(e){
+      resolve({name: input.files[0].name, mimeType: input.files[0].type || 'application/octet-stream', content: e.target.result.split(',')[1]});
+    };
+    r.readAsDataURL(input.files[0]);
   });
-
-  var out = '';
-  order.forEach(function(sec){
-    out += '<div class="vpb-group"><div class="vpb-group-head">'+escq(HANTAR_SECTIONS[sec] || sec)+'</div>';
-    groups[sec].forEach(function(it){
-      var evType = HANTAR_EV[String(it.no)] || 'text';
-      out += '<div class="vpb-item no-bukti" id="hvpb-'+it.no+'">' +
-        '<div class="vpb-q"><span class="vpb-num">'+it.no+'</span><span>'+escq(it.item)+'</span></div>' +
-        '<div class="vpb-opts">';
-      it.options.forEach(function(o, idx){
-        var cls = o.kind === 'P' ? 'positive' : (o.kind === 'NA' ? 'na' : 'negative');
-        out += '<label class="vpb-opt '+cls+'" id="hopt-'+it.no+'-'+idx+'">' +
-          '<input type="radio" name="hvpb_'+it.no+'" value="'+idx+'" data-kind="'+o.kind+'" ' +
-          'onchange="onHantarSelect('+it.no+','+idx+')">' +
-          '<span>'+escq(o.label)+'</span></label>';
-      });
-      out += '</div>' + evidenceWidget(it.no, evType) + '</div>';
-    });
-    out += '</div>';
-  });
-
-  body.innerHTML = out;
-  updateHantarSummary();
-}
-
-function evidenceWidget(no, evType){
-  var tagCls = evType, tagTxt = evType === 'date' ? 'Tarikh' : (evType === 'file' ? 'Fail / Gambar' : 'Rujukan');
-  var h = '<div class="vpb-evidence">' +
-    '<label>Bukti <span class="ev-tag '+tagCls+'">'+tagTxt+'</span></label>' +
-    '<div class="ev-widget">';
-
-  if(evType === 'date'){
-    h += '<div class="ev-date"><input type="date" id="hev-'+no+'" onchange="onHantarBukti('+no+')" oninput="onHantarBukti('+no+')"></div>' +
-         '<input type="text" id="hcat-'+no+'" placeholder="Catatan (pilihan)" style="margin-top:6px;width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 9px;font-size:12.5px;font-family:inherit">';
-  } else if(evType === 'file'){
-    h += '<div class="ev-file"><input type="file" id="hev-'+no+'" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg" onchange="onHantarFile('+no+',this)"></div>' +
-         '<div class="ev-file-list" id="hevl-'+no+'"></div>' +
-         '<input type="text" id="hcat-'+no+'" placeholder="Catatan (pilihan)" style="margin-top:6px;width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 9px;font-size:12.5px;font-family:inherit">';
-  } else {
-    h += '<textarea id="hev-'+no+'" rows="2" placeholder="Petikan / rujukan muka surat dokumen" oninput="onHantarBukti('+no+')"></textarea>' +
-         '<input type="text" id="hcat-'+no+'" placeholder="Catatan (pilihan)" style="margin-top:6px;width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 9px;font-size:12.5px;font-family:inherit">';
-  }
-
-  h += '</div><div class="ev-warn" id="hwarn-'+no+'">Bukti diperlukan untuk item ini.</div></div>';
-  return h;
-}
-
-function onHantarSelect(no, idx){
-  var item = document.getElementById('hvpb-'+no);
-  var opts = item.querySelectorAll('.vpb-opt');
-  for(var i=0;i<opts.length;i++) opts[i].classList.toggle('checked', i===idx);
-  var sel = document.querySelector('input[name="hvpb_'+no+'"]:checked');
-  var kind = sel ? sel.getAttribute('data-kind') : '';
-  // Untuk pilihan Tidak Berkenaan, bukti tidak wajib
-  if(kind === 'NA'){
-    item.classList.add('has-bukti'); item.classList.remove('no-bukti');
-    var w = document.getElementById('hwarn-'+no); if(w) w.classList.remove('show');
-  } else {
-    onHantarBukti(no);
-  }
-  updateHantarSummary();
-}
-
-function onHantarBukti(no){
-  var el = document.getElementById('hev-'+no);
-  var item = document.getElementById('hvpb-'+no);
-  var warn = document.getElementById('hwarn-'+no);
-  var has = false;
-  if(el){
-    if(el.type === 'date') has = !!el.value;
-    else has = el.value.trim().length > 0;
-  }
-  if(HANTAR_FILES[no] && HANTAR_FILES[no].length) has = true;
-  item.classList.toggle('has-bukti', has);
-  item.classList.toggle('no-bukti', !has);
-  if(warn) warn.classList.toggle('show', !has);
-  updateHantarSummary();
-}
-
-function onHantarFile(no, input){
-  if(!input.files || !input.files[0]) return;
-  var f = input.files[0];
-  var rd = new FileReader();
-  rd.onload = function(e){
-    if(!HANTAR_FILES[no]) HANTAR_FILES[no] = [];
-    HANTAR_FILES[no].push({name: f.name, mimeType: f.type || 'application/octet-stream', content: e.target.result.split(',')[1]});
-    var list = document.getElementById('hevl-'+no);
-    if(list){
-      var html2 = '';
-      HANTAR_FILES[no].forEach(function(x, i){
-        html2 += '<div class="ev-file-item"><span>'+(i+1)+'. '+escq(x.name)+'</span><span class="rm" onclick="removeHantarFile('+no+','+i+')">&times;</span></div>';
-      });
-      list.innerHTML = html2;
-    }
-    input.value = '';
-    onHantarBukti(no);
-  };
-  rd.readAsDataURL(f);
-}
-
-function removeHantarFile(no, i){
-  if(HANTAR_FILES[no]) HANTAR_FILES[no].splice(i,1);
-  var list = document.getElementById('hevl-'+no);
-  if(list){
-    var h='';
-    (HANTAR_FILES[no]||[]).forEach(function(x, idx){
-      h += '<div class="ev-file-item"><span>'+(idx+1)+'. '+escq(x.name)+'</span><span class="rm" onclick="removeHantarFile('+no+','+idx+')">&times;</span></div>';
-    });
-    list.innerHTML = h;
-  }
-  onHantarBukti(no);
-}
-
-function updateHantarSummary(){
-  var total = HANTAR_CHECKLIST.length, answered = 0, withEv = 0;
-  HANTAR_CHECKLIST.forEach(function(it){
-    var sel = document.querySelector('input[name="hvpb_'+it.no+'"]:checked');
-    if(sel) answered++;
-    var item = document.getElementById('hvpb-'+it.no);
-    if(item && item.classList.contains('has-bukti')) withEv++;
-  });
-  var el = document.getElementById('vpb-hantar-summary');
-  if(el){
-    el.innerHTML = '<div><span>Soalan</span><strong>'+total+'</strong></div>' +
-      '<div><span>Dijawab</span><strong>'+answered+'/'+total+'</strong></div>' +
-      '<div><span>Ada bukti</span><strong>'+withEv+'/'+total+'</strong></div>';
-  }
 }
 
 function submitForm(e){
-  e.preventDefault();
+  if(e && e.preventDefault) e.preventDefault();
   var fasa = document.querySelector('input[name="fasa"]:checked').value;
 
-  // Semak pengakuan
   if(!document.getElementById('akuan').checked){
     showAlert('Sila tandakan pengakuan penghantar.','error'); return false;
   }
-
-  // Kumpul jawapan VPB
-  var vpbItems = [], missing = [], noEv = [];
-  HANTAR_CHECKLIST.forEach(function(it){
-    var sel = document.querySelector('input[name="hvpb_'+it.no+'"]:checked');
-    var evEl = document.getElementById('hev-'+it.no);
-    var catEl = document.getElementById('hcat-'+it.no);
-    var evType = HANTAR_EV[String(it.no)] || 'text';
-    var idx = sel ? Number(sel.value) : -1;
-    var opt = idx >= 0 ? it.options[idx] : null;
-
-    var bukti = '';
-    if(evType === 'date' && evEl) bukti = evEl.value || '';
-    else if(evType === 'text' && evEl) bukti = evEl.value.trim();
-
-    var files = HANTAR_FILES[it.no] || [];
-
-    if(!sel) missing.push(it.no);
-    if(opt && opt.kind !== 'NA' && !bukti && !files.length) noEv.push(it.no);
-
-    vpbItems.push({
-      no: it.no, item: it.item, ref: it.section, seksyen: it.section,
-      pilihan: opt ? opt.label : '', kod: opt ? opt.kind : '',
-      jawapan: opt ? opt.kind : '',
-      catatan: catEl ? catEl.value : '',
-      bukti: bukti,
-      files: files
-    });
-  });
-
-  if(missing.length){ showAlert('Sila jawab semua soalan. Belum dijawab: item '+missing.join(', '),'error'); return false; }
-  if(noEv.length){ showAlert('Bukti diperlukan untuk item: '+noEv.join(', '),'error'); return false; }
-
-  showLoading('Menghantar dokumen dan menyimpan bukti...');
 
   var data = {
     ipgKampus: document.getElementById('ipgKampus').value,
@@ -928,34 +739,44 @@ function submitForm(e){
     namaPensyarah: document.getElementById('namaPensyarah').value,
     namaSME: document.getElementById('namaSME').value,
     namaKJA: document.getElementById('namaKJA').value,
-    fasa: fasa,
-    vpbItems: vpbItems
+    fasa: fasa
   };
 
-  var ids = (fasa==='perancangan') ? ['JST','Soalan','Skema','Rubrik'] : ['LAM01','LAM02','LAM03','LAM04'];
-  var keys = ['failJST','failSoalan','failSkema','failRubrik'];
-  var keysM = ['failLAM01','failLAM02','failLAM03','failLAM04'];
-  var useKeys = (fasa==='perancangan') ? keys : keysM;
+  var ids, keys;
+  if(fasa === 'perancangan'){
+    ids  = ['JST','Soalan','Skema','Rubrik'];
+    keys = ['failJST','failSoalan','failSkema','failRubrik'];
+  } else {
+    ids  = ['LAM01','LAM02','LAM03','LAM04'];
+    keys = ['failLAM01','failLAM02','failLAM03','failLAM04'];
+  }
+
   var promises = ids.map(function(id, i){
-    return readB64(document.getElementById('fail'+id)).then(function(f){ if(f) data[useKeys[i]] = f; });
+    return readB64(document.getElementById('fail'+id)).then(function(f){ if(f) data[keys[i]] = f; });
   });
 
+  showLoading('Memuat naik dokumen...');
   Promise.all(promises).then(function(){
+    var ada = ids.filter(function(id){ return document.getElementById('fail'+id).files[0]; });
+    if(!ada.length){
+      hideLoading();
+      showAlert('Sila muat naik sekurang-kurangnya satu dokumen.','error');
+      throw new Error('__stop__');
+    }
     return api('submit', data);
   }).then(function(res){
     hideLoading();
     if(res.success){
-      showAlert(res.message+' ID: <strong>'+res.id+'</strong><br>Folder subjek: '+escq(res.folder||'-'),'success');
+      showAlert(res.message + ' ID: <strong>' + res.id + '</strong><br>Folder: ' + escq(res.folder || '-'), 'success');
       document.getElementById('hantarForm').reset();
-      HANTAR_FILES = {};
       toggleFail();
       setTimeout(function(){ showPage('senarai'); }, 2500);
     } else {
-      showAlert(res.error||'Ralat tidak diketahui','error');
+      showAlert(res.error || 'Ralat tidak diketahui','error');
     }
   }).catch(function(err){
     hideLoading();
-    showAlert('Ralat: '+err,'error');
+    if(String(err) !== 'Error: __stop__') showAlert('Ralat: '+err,'error');
   });
   return false;
 }
@@ -1250,6 +1071,14 @@ function adminLogout(){
 
 function applyAdminState(){
   var isAdmin = !!ADMIN_TOKEN;
+  var lock = document.getElementById('pd-lock');
+  if(lock){ lock.style.display = isAdmin ? 'none' : 'inline-flex'; }
+  var bs = document.getElementById('btn-save-verif');
+  if(bs){ bs.style.display = isAdmin ? '' : 'none'; }
+  var ai = document.getElementById('aiBtn');
+  if(ai){ ai.style.display = isAdmin ? '' : 'none'; }
+  var bar = document.querySelector('.ai-bar');
+  if(bar){ bar.style.display = isAdmin ? '' : 'none'; }
   var navK = document.getElementById('nav-konfigurasi');
   if(navK){ navK.style.display = isAdmin ? '' : 'none'; }
   var btn = document.getElementById('nav-admin');
@@ -1263,7 +1092,8 @@ function applyAdminState(){
 var _apiCore = api;
 api = function(action, data){
   data = data || {};
-  var sensitive = (action === 'getAIConfig' || action === 'saveApiKey' || action === 'testApiKey' || action === 'setAdminPassword');
+  var sensitive = (action === 'getAIConfig' || action === 'saveApiKey' || action === 'testApiKey'
+                || action === 'setAdminPassword' || action === 'saveVerifikasi' || action === 'aiAnalisis');
   if(sensitive && ADMIN_TOKEN) data.token = ADMIN_TOKEN;
   return _apiCore(action, data).then(function(res){
     if(res && res.needLogin){
